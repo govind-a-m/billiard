@@ -39,46 +39,44 @@ public class BallController : MonoBehaviour {
 
     public void FixedUpdate()
     {
-        if (playing) 
+        playerPosition = rb.transform.position;           
+        if (Input.GetKey(KeyCode.LeftArrow))
         {
-            playerPosition = rb.transform.position;           
-            if (Input.GetKey(KeyCode.LeftArrow))
+            Quaternion rotate = Quaternion.Euler(0, -2, 0);
+            lineSize = rotate * lineSize;
+        }
+        if (Input.GetKey(KeyCode.RightArrow))
+        {
+            Quaternion rotate = Quaternion.Euler(0, 2, 0);
+            lineSize = rotate * lineSize;
+        }
+        endLine = playerPosition + lineSize;
+        moveVertical += Input.GetAxis("Vertical");
+        if (moveVertical >= maxForce)
+        {
+            moveVertical = maxForce;
+        }
+        endLine += lineSize.normalized * moveVertical;
+        line.SetPosition(0, playerPosition);
+        line.SetPosition(1, endLine);
+        if(rb.velocity.magnitude < ThreshVel)
+        {   //GameProcess.DisableMessangers();
+            if(tm.ontable.IndexOf("Ball") == -1)
             {
-                Quaternion rotate = Quaternion.Euler(0, -2, 0);
-                lineSize = rotate * lineSize;
-            }
-            if (Input.GetKey(KeyCode.RightArrow))
-            {
-                Quaternion rotate = Quaternion.Euler(0, 2, 0);
-                lineSize = rotate * lineSize;
-            }
-            endLine = playerPosition + lineSize;
-            moveVertical += Input.GetAxis("Vertical");
-            if (moveVertical >= maxForce)
-            {
-                moveVertical = maxForce;
-            }
-            endLine += lineSize.normalized * moveVertical;
-            line.SetPosition(0, playerPosition);
-            line.SetPosition(1, endLine);
-            if(rb.velocity.magnitude < ThreshVel)
-            {   //[TODO]disable sending messages
-                if(tm.ontable.IndexOf("Ball") == -1)
-                {
-                    rb.transform.position = new Vector3(-23f, 25.95059f, 0f);
-                }
-                else
-                {
-                    if (Input.GetKey(KeyCode.Space))
-                    {
-                        rb.AddForce((endLine - playerPosition) * speed);
-                    }
-                }
+                rb.transform.position = new Vector3(-23f, 25.95059f, 0f);
             }
             else
             {
-                //[todo] enable sending messages
+                if (Input.GetKey(KeyCode.Space))
+                {
+                    rb.AddForce((endLine - playerPosition) * speed);
+                    GameProcess.EnableMessangers();
+                }
             }
+        }
+        else
+        {
+            //GameProcess.EnableMessangers();
         }
     }
 

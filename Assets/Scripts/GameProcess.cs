@@ -7,6 +7,7 @@ public class GameProcess : MonoBehaviour
 {   
     public static ProcessPipeline pipeline;
     public static List<messanger> BallMsgr;
+    public static Rigidbody striker_rb;
 
     void Awake()
     {
@@ -19,6 +20,10 @@ public class GameProcess : MonoBehaviour
         foreach (Transform child in gameObject.GetComponentInChildren<Transform>())
         {
             BallMsgr.Add(child.gameObject.GetComponent<messanger>());
+            if(child.gameObject.name=="white")
+            {
+                striker_rb = child.gameObject.GetComponent<Rigidbody>();
+            }
         }
     }
 
@@ -29,6 +34,31 @@ public class GameProcess : MonoBehaviour
             Debug.Log(msg);
         }
     }                    
+
+    public static void DisableMessangers()
+    {   
+        foreach(messanger msgr in BallMsgr)
+        {
+            msgr.DisableMessanger();
+        }
+    }
+
+    public static void EnableMessangers()
+    {   
+        foreach(messanger msgr in BallMsgr)
+        {
+            msgr.EnableMessanger();
+        }
+    }
+
+    public static bool StrikerMoving()
+    {
+        if(striker_rb.velocity.magnitude<0.01)
+        {
+            return true;
+        }
+        return false;
+    }
 
     private void OnDestroy()
     {

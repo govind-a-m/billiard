@@ -11,19 +11,29 @@ public class messanger : MonoBehaviour
     public BallData ball;
     public ProcessPipeline Gp;
     public SQEle MsgTemplate;
+    public Rigidbody rb;
+    public float VelocityThreshold = 0.01f;
 
     void Start()
     {
         ball = new BallData(gameObject.name,gameObject.transform.position);
         Gp = GameProcess.pipeline;
         MsgTemplate = new SQEle(this.ConvToBytes(),testcallback);
+        rb = GetComponent<Rigidbody>();
         enabled = false;
     }
 
     void Update()
-    {
-        MsgTemplate.data = ConvToBytes();
-        Gp.sendQ.Enq(MsgTemplate);
+    {   
+        if((rb.velocity.magnitude>VelocityThreshold) || (GameProcess.StrikerMoving()))
+        {
+            MsgTemplate.data = ConvToBytes();
+            Gp.sendQ.Enq(MsgTemplate);
+        }
+        else
+        {
+            enabled = false;
+        }
     }
 
     public void EnableMessanger()
