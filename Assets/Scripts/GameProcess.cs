@@ -10,13 +10,10 @@ public class GameProcess : MonoBehaviour
     public static Rigidbody striker_rb;
 
     void Awake()
-    {
+    {   
+        BallMsgr = new List<messanger>();
         pipeline = new ProcessPipeline();
         pipeline.StartPipeLine();
-    }
-
-    void Start()
-    {   BallMsgr = new List<messanger>();
         foreach (Transform child in gameObject.GetComponentInChildren<Transform>())
         {
             BallMsgr.Add(child.gameObject.GetComponent<messanger>());
@@ -53,7 +50,7 @@ public class GameProcess : MonoBehaviour
 
     public static bool StrikerMoving()
     {
-        if(striker_rb.velocity.magnitude<0.01)
+        if(striker_rb.velocity.magnitude>0.01)
         {
             return true;
         }

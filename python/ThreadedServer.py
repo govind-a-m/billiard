@@ -16,7 +16,7 @@ class ThreadedServer(threading.Thread):
 			self.s.sendall(msg.data)
 			msg.ServiceCallback()
 
-	def Send(self,msg,callback=lambda :print('send callback')):
+	def Send(self,msg,callback=lambda :None):
 		self.Q.put(SQEle(msg,callback))
 
 	def stop(self):

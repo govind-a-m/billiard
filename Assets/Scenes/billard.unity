@@ -293,7 +293,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 70521176}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 5b15c390f336d244f9e4252bcd1b7f17, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
@@ -403,6 +403,9 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
+  rb: {fileID: 0}
+  VelocityThreshold: 0.01
+  WaitTimeVel: 0.1
 --- !u!1 &152767658 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1327158158831396, guid: 258d8feaf9fb9457c866827a0aae8ea6, type: 3}
@@ -425,6 +428,9 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
+  rb: {fileID: 0}
+  VelocityThreshold: 0.01
+  WaitTimeVel: 0.1
 --- !u!1001 &180377264
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -521,6 +527,9 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
+  rb: {fileID: 0}
+  VelocityThreshold: 0.01
+  WaitTimeVel: 0.1
 --- !u!1001 &281454355
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -767,7 +776,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 310251600}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 5b15c390f336d244f9e4252bcd1b7f17, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
@@ -1025,7 +1034,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 387841291}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 5b15c390f336d244f9e4252bcd1b7f17, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
@@ -1054,6 +1063,9 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
+  rb: {fileID: 0}
+  VelocityThreshold: 0.01
+  WaitTimeVel: 0.1
 --- !u!1 &403520373 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1327158158831396, guid: 258d8feaf9fb9457c866827a0aae8ea6, type: 3}
@@ -1076,6 +1088,9 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
+  rb: {fileID: 0}
+  VelocityThreshold: 0.01
+  WaitTimeVel: 0.1
 --- !u!1 &444988242
 GameObject:
   m_ObjectHideFlags: 0
@@ -1246,7 +1261,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 466303145}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 5b15c390f336d244f9e4252bcd1b7f17, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
@@ -1373,6 +1388,9 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
+  rb: {fileID: 0}
+  VelocityThreshold: 0.01
+  WaitTimeVel: 0.1
 --- !u!4 &484480395 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4778775753271568, guid: 258d8feaf9fb9457c866827a0aae8ea6, type: 3}
@@ -1933,7 +1951,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 622742451}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 5b15c390f336d244f9e4252bcd1b7f17, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
@@ -2103,7 +2121,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 662391392}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 5b15c390f336d244f9e4252bcd1b7f17, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
@@ -2199,7 +2217,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 706097321}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 5b15c390f336d244f9e4252bcd1b7f17, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
@@ -2403,7 +2421,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 735386328}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 5b15c390f336d244f9e4252bcd1b7f17, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
@@ -2506,6 +2524,9 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
+  rb: {fileID: 0}
+  VelocityThreshold: 0.01
+  WaitTimeVel: 0.1
 --- !u!1 &904637242 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1327158158831396, guid: 258d8feaf9fb9457c866827a0aae8ea6, type: 3}
@@ -2528,6 +2549,9 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
+  rb: {fileID: 0}
+  VelocityThreshold: 0.01
+  WaitTimeVel: 0.1
 --- !u!1 &927013463
 GameObject:
   m_ObjectHideFlags: 0
@@ -2632,7 +2656,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 927013463}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5c55393366462e541adf355877e67127, type: 3}
   m_Name: 
@@ -3213,7 +3237,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1088669130}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 5b15c390f336d244f9e4252bcd1b7f17, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
@@ -3390,7 +3414,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1164255823}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 5b15c390f336d244f9e4252bcd1b7f17, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
@@ -4433,6 +4457,9 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
+  rb: {fileID: 0}
+  VelocityThreshold: 0.01
+  WaitTimeVel: 0.1
 --- !u!1 &1376608276 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1327158158831396, guid: 258d8feaf9fb9457c866827a0aae8ea6, type: 3}
@@ -4455,6 +4482,9 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
+  rb: {fileID: 0}
+  VelocityThreshold: 0.01
+  WaitTimeVel: 0.1
 --- !u!1001 &1421649974
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5202,7 +5232,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1592643890}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 5b15c390f336d244f9e4252bcd1b7f17, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
@@ -5312,6 +5342,9 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
+  rb: {fileID: 0}
+  VelocityThreshold: 0.01
+  WaitTimeVel: 0.1
 --- !u!1 &1684811294
 GameObject:
   m_ObjectHideFlags: 0
@@ -5415,6 +5448,9 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
+  rb: {fileID: 0}
+  VelocityThreshold: 0.01
+  WaitTimeVel: 0.1
 --- !u!1 &1686412799
 GameObject:
   m_ObjectHideFlags: 0
@@ -5737,6 +5773,9 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
+  rb: {fileID: 0}
+  VelocityThreshold: 0.01
+  WaitTimeVel: 0.1
 --- !u!1 &1871137013 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1327158158831396, guid: 258d8feaf9fb9457c866827a0aae8ea6, type: 3}
@@ -5759,6 +5798,9 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
+  rb: {fileID: 0}
+  VelocityThreshold: 0.01
+  WaitTimeVel: 0.1
 --- !u!1 &1874017167
 GameObject:
   m_ObjectHideFlags: 0
@@ -5848,7 +5890,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1874017167}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 5b15c390f336d244f9e4252bcd1b7f17, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
@@ -5877,6 +5919,9 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
+  rb: {fileID: 0}
+  VelocityThreshold: 0.01
+  WaitTimeVel: 0.1
 --- !u!1 &1900214483
 GameObject:
   m_ObjectHideFlags: 0
@@ -6546,3 +6591,6 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
+  rb: {fileID: 0}
+  VelocityThreshold: 0.01
+  WaitTimeVel: 0.1

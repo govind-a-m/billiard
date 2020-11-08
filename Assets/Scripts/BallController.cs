@@ -33,7 +33,7 @@ public class BallController : MonoBehaviour {
         playerPosition = rb.transform.position;
         endLine = playerPosition + lineSize;
         line = GetComponent<LineRenderer>();
-        tm = GameObject.Find("Box001").GetComponent<TableManager>();
+        // tm = GameObject.Find("Box001").GetComponent<TableManager>();
     }
 
 
@@ -60,36 +60,13 @@ public class BallController : MonoBehaviour {
         line.SetPosition(0, playerPosition);
         line.SetPosition(1, endLine);
         if(rb.velocity.magnitude < ThreshVel)
-        {   //GameProcess.DisableMessangers();
-            if(tm.ontable.IndexOf("Ball") == -1)
+        {   
+            if (Input.GetKey(KeyCode.Space))
             {
-                rb.transform.position = new Vector3(-23f, 25.95059f, 0f);
-            }
-            else
-            {
-                if (Input.GetKey(KeyCode.Space))
-                {
-                    rb.AddForce((endLine - playerPosition) * speed);
-                    GameProcess.EnableMessangers();
-                }
+                rb.AddForce((endLine - playerPosition) * speed);
+                GameProcess.EnableMessangers();
             }
         }
-        else
-        {
-            //GameProcess.EnableMessangers();
-        }
-    }
-
-    public bool isStrikerOutOfTable()
-    {
-        if (rb.velocity.magnitude < ThreshVel)
-        { 
-            if (tm.ontable.IndexOf("Ball") == -1)
-            {
-                return true;
-            }
-        }
-        return false;
     }
 
     public void tempsendcallback()
@@ -97,3 +74,15 @@ public class BallController : MonoBehaviour {
         Debug.Log("temp callback");
     }
 }
+
+    // public bool isStrikerOutOfTable()
+    // {
+    //     if (rb.velocity.magnitude < ThreshVel)
+    //     { 
+    //         if (tm.ontable.IndexOf("Ball") == -1)
+    //         {
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // }
