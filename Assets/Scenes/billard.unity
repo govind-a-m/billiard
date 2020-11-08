@@ -390,7 +390,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1327158158831396, guid: 258d8feaf9fb9457c866827a0aae8ea6, type: 3}
       propertyPath: m_Name
-      value: Ball (6)
+      value: green
       objectReference: {fileID: 0}
     - target: {fileID: 1327158158831396, guid: 258d8feaf9fb9457c866827a0aae8ea6, type: 3}
       propertyPath: m_TagString
@@ -460,7 +460,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1327158158831396, guid: 258d8feaf9fb9457c866827a0aae8ea6, type: 3}
       propertyPath: m_Name
-      value: Ball (11)
+      value: red_s
       objectReference: {fileID: 0}
     - target: {fileID: 1327158158831396, guid: 258d8feaf9fb9457c866827a0aae8ea6, type: 3}
       propertyPath: m_TagString
@@ -1256,8 +1256,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ThreshVel: 0.01
-  player1Text: {fileID: 0}
-  player2Text: {fileID: 0}
   moveVertical: 0
   speed: 50
   playerPosition: {x: 0, y: 0, z: 0}
@@ -1275,7 +1273,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1327158158831396, guid: 258d8feaf9fb9457c866827a0aae8ea6, type: 3}
       propertyPath: m_Name
-      value: Ball (4)
+      value: violet
       objectReference: {fileID: 0}
     - target: {fileID: 1327158158831396, guid: 258d8feaf9fb9457c866827a0aae8ea6, type: 3}
       propertyPath: m_TagString
@@ -1525,8 +1523,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d7cbe5079b714413b5cc3f2eb0c2ce6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myText: {fileID: 0}
-  myButton: {fileID: 0}
 --- !u!1 &601695510
 GameObject:
   m_ObjectHideFlags: 0
@@ -1635,8 +1631,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d7cbe5079b714413b5cc3f2eb0c2ce6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myText: {fileID: 0}
-  myButton: {fileID: 0}
 --- !u!1001 &619522559
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1646,7 +1640,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1327158158831396, guid: 258d8feaf9fb9457c866827a0aae8ea6, type: 3}
       propertyPath: m_Name
-      value: Ball (2)
+      value: blue
       objectReference: {fileID: 0}
     - target: {fileID: 1327158158831396, guid: 258d8feaf9fb9457c866827a0aae8ea6, type: 3}
       propertyPath: m_TagString
@@ -1812,7 +1806,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1327158158831396, guid: 258d8feaf9fb9457c866827a0aae8ea6, type: 3}
       propertyPath: m_Name
-      value: Ball (14)
+      value: green_s
       objectReference: {fileID: 0}
     - target: {fileID: 1327158158831396, guid: 258d8feaf9fb9457c866827a0aae8ea6, type: 3}
       propertyPath: m_TagString
@@ -2173,8 +2167,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d7cbe5079b714413b5cc3f2eb0c2ce6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myText: {fileID: 0}
-  myButton: {fileID: 0}
 --- !u!1 &735386328
 GameObject:
   m_ObjectHideFlags: 0
@@ -2280,7 +2272,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1327158158831396, guid: 258d8feaf9fb9457c866827a0aae8ea6, type: 3}
       propertyPath: m_Name
-      value: Ball (3)
+      value: red
       objectReference: {fileID: 0}
     - target: {fileID: 1327158158831396, guid: 258d8feaf9fb9457c866827a0aae8ea6, type: 3}
       propertyPath: m_TagString
@@ -3219,7 +3211,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1327158158831396, guid: 258d8feaf9fb9457c866827a0aae8ea6, type: 3}
       propertyPath: m_Name
-      value: Ball (12)
+      value: violet_s
       objectReference: {fileID: 0}
     - target: {fileID: 1327158158831396, guid: 258d8feaf9fb9457c866827a0aae8ea6, type: 3}
       propertyPath: m_TagString
@@ -3511,8 +3503,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d7cbe5079b714413b5cc3f2eb0c2ce6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myText: {fileID: 0}
-  myButton: {fileID: 0}
 --- !u!1 &1232533305
 GameObject:
   m_ObjectHideFlags: 0
@@ -3731,8 +3721,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d7cbe5079b714413b5cc3f2eb0c2ce6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myText: {fileID: 0}
-  myButton: {fileID: 0}
 --- !u!135 &1252366944
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -4154,6 +4142,10 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 1327158158831396, guid: 258d8feaf9fb9457c866827a0aae8ea6, type: 3}
+      propertyPath: m_Name
+      value: white
+      objectReference: {fileID: 0}
     - target: {fileID: 4778775753271568, guid: 258d8feaf9fb9457c866827a0aae8ea6, type: 3}
       propertyPath: m_LocalPosition.x
       value: -22.914558
@@ -4225,7 +4217,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1327158158831396, guid: 258d8feaf9fb9457c866827a0aae8ea6, type: 3}
       propertyPath: m_Name
-      value: Ball (7)
+      value: brown
       objectReference: {fileID: 0}
     - target: {fileID: 1327158158831396, guid: 258d8feaf9fb9457c866827a0aae8ea6, type: 3}
       propertyPath: m_TagString
@@ -4295,7 +4287,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1327158158831396, guid: 258d8feaf9fb9457c866827a0aae8ea6, type: 3}
       propertyPath: m_Name
-      value: Ball (5)
+      value: orange
       objectReference: {fileID: 0}
     - target: {fileID: 1327158158831396, guid: 258d8feaf9fb9457c866827a0aae8ea6, type: 3}
       propertyPath: m_TagString
@@ -4545,8 +4537,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d7cbe5079b714413b5cc3f2eb0c2ce6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myText: {fileID: 0}
-  myButton: {fileID: 0}
 --- !u!1001 &1522403897
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4556,7 +4546,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1327158158831396, guid: 258d8feaf9fb9457c866827a0aae8ea6, type: 3}
       propertyPath: m_Name
-      value: Ball (13)
+      value: orange_s
       objectReference: {fileID: 0}
     - target: {fileID: 1327158158831396, guid: 258d8feaf9fb9457c866827a0aae8ea6, type: 3}
       propertyPath: m_TagString
@@ -4799,7 +4789,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1327158158831396, guid: 258d8feaf9fb9457c866827a0aae8ea6, type: 3}
       propertyPath: m_Name
-      value: Ball (10)
+      value: blue_s
       objectReference: {fileID: 0}
     - target: {fileID: 1327158158831396, guid: 258d8feaf9fb9457c866827a0aae8ea6, type: 3}
       propertyPath: m_TagString
@@ -5317,7 +5307,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1327158158831396, guid: 258d8feaf9fb9457c866827a0aae8ea6, type: 3}
       propertyPath: m_Name
-      value: Ball (1)
+      value: yellow
       objectReference: {fileID: 0}
     - target: {fileID: 1327158158831396, guid: 258d8feaf9fb9457c866827a0aae8ea6, type: 3}
       propertyPath: m_TagString
@@ -5600,7 +5590,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1327158158831396, guid: 258d8feaf9fb9457c866827a0aae8ea6, type: 3}
       propertyPath: m_Name
-      value: Ball (8)
+      value: black
       objectReference: {fileID: 0}
     - target: {fileID: 1327158158831396, guid: 258d8feaf9fb9457c866827a0aae8ea6, type: 3}
       propertyPath: m_TagString
@@ -5751,7 +5741,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1327158158831396, guid: 258d8feaf9fb9457c866827a0aae8ea6, type: 3}
       propertyPath: m_Name
-      value: Ball (15)
+      value: brown_s
       objectReference: {fileID: 0}
     - target: {fileID: 1327158158831396, guid: 258d8feaf9fb9457c866827a0aae8ea6, type: 3}
       propertyPath: m_TagString
@@ -5902,7 +5892,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1327158158831396, guid: 258d8feaf9fb9457c866827a0aae8ea6, type: 3}
       propertyPath: m_Name
-      value: Ball (9)
+      value: yellow_s
       objectReference: {fileID: 0}
     - target: {fileID: 1327158158831396, guid: 258d8feaf9fb9457c866827a0aae8ea6, type: 3}
       propertyPath: m_TagString
@@ -5972,6 +5962,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2031301245}
+  - component: {fileID: 2031301246}
   m_Layer: 0
   m_Name: Balls
   m_TagString: Untagged
@@ -6009,6 +6000,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2031301246
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2031301244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 499a37b36ca38e44faec742d7150e914, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BallMsgr: []
 --- !u!1 &2082783855
 GameObject:
   m_ObjectHideFlags: 0

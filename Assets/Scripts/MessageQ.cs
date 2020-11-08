@@ -12,42 +12,88 @@ namespace SQ
 {
     public class SQEle
     {
-        public byte[] data {get;set;}
+        public byte[] data;
         public delegate void SendCallBack();
-        public SendCallBack callBack {get;set;}
-        public Socket sock {get;set;}
+        public SendCallBack callBack;
+        public static Socket sock;
 
+        public SQEle(byte[] data,SendCallBack callBack)
+        {
+            this.data = data;
+            this.callBack = callBack;
+        }
         public void ServiceCallBack()
         {
-            this.callBack();
+            callBack();
         }
     }
 
     public class SendQ
     {
         public Queue Q;
-        public ManualResetEvent EnqEvent {get;}
+        public ManualResetEvent EnqEvent = new ManualResetEvent(false);
+
+        public SendQ()
+        {
+            Q = new Queue();
+        }
+
         public void Enq(SQEle ele)
         {
-            this.Q.Enqueue(ele);
-            this.EnqEvent.Set();
+            Q.Enqueue(ele);
+            EnqEvent.Set();
         }
 
         public SQEle next()
         {
-            var ret  = (SQEle)this.Q.Dequeue();
-            if(this.Q.Count==0)
+            var ret  = (SQEle)Q.Dequeue();
+            if(Q.Count==0)
             {
-                this.EnqEvent.Reset();
+                EnqEvent.Reset();
             }
             return ret;
         }
 
         public void QStopMsg()
         {
-            this.Q.Enqueue("STOP");
-            this.EnqEvent.Set();
+            Q.Enqueue("STOP");
+            EnqEvent.Set();
         }
+    }
+
+    public class RecvQ
+    {
+        public Queue Q;
+        public ManualResetEvent IsEmpty = new ManualResetEvent(false);
+
+        public RecvQ()
+        {
+            Q = new Queue();
+        }
+
+        public void Enq(String recv_text)
+        {
+            Q.Enqueue(recv_text);
+            IsEmpty.Reset();
+        }
+
+        public String next()
+        {   String ret = String.Empty;
+            if(Q.Count>0)
+            {
+                ret  = (String)Q.Dequeue();
+            }
+            if(Q.Count==0)
+            {
+                IsEmpty.Reset();
+            }
+            return ret;
+        }
+
+        public void QStopMsg()
+        {
+            // how to stop recv thread
+        }        
     }
 
 }

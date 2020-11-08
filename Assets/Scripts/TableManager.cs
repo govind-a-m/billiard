@@ -27,6 +27,4 @@ public class TableManager : MonoBehaviour
     {
         ontable.Remove(other.gameObject.name);
     }
-
-
 }

@@ -1,27 +1,23 @@
-import time
-import zmq
 import threading
+from MessageQ import SendQ,SQEle
 
 class ThreadedServer(threading.Thread):
-	def __init__(self,send_func,recv_func):
+	def __init__(self,s):
 		threading.Thread.__init__(self)
-		self.context = zmq.Context()
-		self.socket = self.context.socket(zmq.REP)
-		self.socket.bind("tcp://*:5555")
-		self.send_func = send_func
-		self.recv_func = recv_func
-		self.RESP_REQ_State = "REQ"
+		self.s = s
 		self.Running = False
+		self.Q = SendQ()
 
 	def run(self):
-		Running = True
-		while Running:
-			if self.RESP_REQ_State=="REQ":
-				self.recv_func(self.socket.recv())
-				self.RESP_REQ_State = "RESP"
-			else:
-				self.socket.send(self.send_func())
-				self.RESP_REQ_State = "REQ"
+		self.Running = True
+		while self.Running:
+			self.Q.isnot_empty.wait()
+			msg = self.Q.get()
+			self.s.sendall(msg.data)
+			msg.ServiceCallback()
+
+	def Send(self,msg,callback=lambda :print('send callback')):
+		self.Q.put(SQEle(msg,callback))
 
 	def stop(self):
 		self.Running = False

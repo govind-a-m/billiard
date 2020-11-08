@@ -2,6 +2,9 @@
 using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.UI;
+using SQ;
+using System.Text;
+using System;
 
 public class BallController : MonoBehaviour {
 
@@ -18,17 +21,6 @@ public class BallController : MonoBehaviour {
     public int maxForce;
     public Rigidbody striker;
     private TableManager tm;
-    public ProcessPipeline pipeline;
-
-    public string ReadData()
-    {
-        return "test";
-    }
-
-    public void HandleReturnMsg(string msg)
-    {
-        Debug.Log(msg);
-    }
 
     void Start()
     {
@@ -42,72 +34,68 @@ public class BallController : MonoBehaviour {
         endLine = playerPosition + lineSize;
         line = GetComponent<LineRenderer>();
         tm = GameObject.Find("Box001").GetComponent<TableManager>();
-        pipeline = new ProcessPipeline() { readData_Func = ReadData, returnData_Func = HandleReturnMsg };
-        pipeline.Start();
     }
 
-    void FixedUpdate()
+
+    public void FixedUpdate()
     {
-        if (playing) {
-            playerPosition = rb.transform.position;
-
-            if (isStrikerOnTable())
+        if (playing) 
+        {
+            playerPosition = rb.transform.position;           
+            if (Input.GetKey(KeyCode.LeftArrow))
             {
-                if (Input.GetKey(KeyCode.LeftArrow))
-                {
-                    Quaternion rotate = Quaternion.Euler(0, -2, 0);
-                    lineSize = rotate * lineSize;
-                }
-
-                if (Input.GetKey(KeyCode.RightArrow))
-                {
-                    Quaternion rotate = Quaternion.Euler(0, 2, 0);
-                    lineSize = rotate * lineSize;
-                }
-
-                endLine = playerPosition + lineSize;
-                moveVertical += Input.GetAxis("Vertical");
-
-                if (moveVertical >= maxForce)
-                {
-                    moveVertical = maxForce;
-                }
-
-                endLine += lineSize.normalized * moveVertical;
-                line.SetPosition(0, playerPosition);
-                line.SetPosition(1, endLine);
-
-                if (Input.GetKey(KeyCode.Space))
-                {
-                    rb.AddForce((endLine - playerPosition) * speed);
-                }
-                if (Input.GetKey(KeyCode.RightControl))
+                Quaternion rotate = Quaternion.Euler(0, -2, 0);
+                lineSize = rotate * lineSize;
+            }
+            if (Input.GetKey(KeyCode.RightArrow))
+            {
+                Quaternion rotate = Quaternion.Euler(0, 2, 0);
+                lineSize = rotate * lineSize;
+            }
+            endLine = playerPosition + lineSize;
+            moveVertical += Input.GetAxis("Vertical");
+            if (moveVertical >= maxForce)
+            {
+                moveVertical = maxForce;
+            }
+            endLine += lineSize.normalized * moveVertical;
+            line.SetPosition(0, playerPosition);
+            line.SetPosition(1, endLine);
+            if(rb.velocity.magnitude < ThreshVel)
+            {   //[TODO]disable sending messages
+                if(tm.ontable.IndexOf("Ball") == -1)
                 {
                     rb.transform.position = new Vector3(-23f, 25.95059f, 0f);
+                }
+                else
+                {
+                    if (Input.GetKey(KeyCode.Space))
+                    {
+                        rb.AddForce((endLine - playerPosition) * speed);
+                    }
                 }
             }
             else
             {
-                gameObject.transform.position = new Vector3(-23f, 25.95059f, 0f);
+                //[todo] enable sending messages
             }
         }
     }
 
-    bool isStrikerOnTable()
+    public bool isStrikerOutOfTable()
     {
         if (rb.velocity.magnitude < ThreshVel)
         { 
             if (tm.ontable.IndexOf("Ball") == -1)
             {
-                return false;
+                return true;
             }
-}
-        return true;
+        }
+        return false;
     }
 
-
-    private void OnDestroy()
+    public void tempsendcallback()
     {
-        pipeline.Stop();
+        Debug.Log("temp callback");
     }
 }
