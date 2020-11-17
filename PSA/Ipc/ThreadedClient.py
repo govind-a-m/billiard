@@ -22,7 +22,7 @@ class ThreadedClient(threading.Thread):
     return self.Q.get()
 
   def RecvAll(self):
-    while ret:=self.RecvOne():
+      while ret:=self.RecvOne():
       yield ret
 
   def stop(self):

@@ -21,7 +21,14 @@ public class BallController : MonoBehaviour {
     public int maxForce;
     public Rigidbody striker;
     private TableManager tm;
+    public float BallRadius;
 
+    public enum RUN_MODES
+    {
+        HUMAN,
+        PSA
+    }
+    public RUN_MODES run_mode;
     void Start()
     {
         speed = 100;
@@ -29,15 +36,28 @@ public class BallController : MonoBehaviour {
         moveVertical = 0;
         playing = true;
         rb = GetComponent<Rigidbody>();
-        lineSize = new Vector3(10.0f, 0.0f, 0.0f);
+        lineSize = new Vector3(6.0f, 0.0f, 0.0f);
         playerPosition = rb.transform.position;
         endLine = playerPosition + lineSize;
         line = GetComponent<LineRenderer>();
+        BallRadius = GetComponent<SphereCollider>().radius;
         // tm = GameObject.Find("Box001").GetComponent<TableManager>();
     }
 
 
     public void FixedUpdate()
+    {   
+        if(run_mode==RUN_MODES.HUMAN)
+        {
+            ProcessHumanInps();
+        }
+        else
+        {
+            ProcessPSAInps();
+        }
+    }
+
+    public void ProcessHumanInps()
     {
         playerPosition = rb.transform.position;           
         if (Input.GetKey(KeyCode.LeftArrow))
@@ -62,9 +82,30 @@ public class BallController : MonoBehaviour {
         if(rb.velocity.magnitude < ThreshVel)
         {   
             if (Input.GetKey(KeyCode.Space))
-            {
-                rb.AddForce((endLine - playerPosition) * speed);
-                GameProcess.EnableMessangers();
+            {   
+                Vector3 force_mode_force = (endLine - playerPosition) * speed;
+                force_mode_force.y = 0.0f;
+                rb.AddForce(force_mode_force,ForceMode.Acceleration);
+                GameProcess.EnableMessangers(messanger.BROADCAST_MODE.PERIODIC);
+            }
+        }        
+    }
+
+    public void ProcessPSAInps()
+    {
+        if(rb.velocity.magnitude < ThreshVel)
+        {   if(GameProcess.Fc.F>0.0f)
+            {   Debug.Log("recived command"+GameProcess.Fc.ToString());
+                rb.velocity = Vector3.zero;
+                // bring ball back to ground?
+                rb.rotation = Quaternion.identity;
+                Vector3 force_vec = GameProcess.Fc.ConvertToVector();
+                Vector3 impact_loc = new Vector3(gameObject.transform.position.x+BallRadius*Mathf.Cos(GameProcess.Fc.phsi),
+                                                gameObject.transform.position.y,
+                                                gameObject.transform.position.z+BallRadius*Mathf.Sin(GameProcess.Fc.phsi));
+                rb.AddForceAtPosition(force_vec,impact_loc,ForceMode.Impulse);
+                GameProcess.EnableMessangers(messanger.BROADCAST_MODE.ONESHOT);
+                GameProcess.Fc.F = 0.0f;
             }
         }
     }

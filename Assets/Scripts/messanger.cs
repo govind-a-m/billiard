@@ -15,9 +15,16 @@ public class messanger : MonoBehaviour
     public Rigidbody rb;
     public float VelocityThreshold = 0.05f;
     public float WaitTimeVel = 0.1f;
-    public float BroadcastPeriod = 0.1f;
+    public float BroadcastPeriod = 0.2f;
     public Timer timer;
     public Timer BroadcastTimer;
+    public enum BROADCAST_MODE
+    {
+        PERIODIC,
+        ONESHOT
+    }
+
+    public BROADCAST_MODE broadcast_mode;
 
     void Start()
     {
@@ -35,10 +42,16 @@ public class messanger : MonoBehaviour
     {   if(BroadcastTimer.Expired(Time.deltaTime))
         {   BroadcastTimer.ResetTimer();
             if((rb.velocity.magnitude>VelocityThreshold) || (GameProcess.StrikerMoving()))
-            {
-                MsgTemplate.data = ConvToBytes();
-                Gp.sendQ.Enq(MsgTemplate);
-                timer.ResetTimer();
+            {   if(broadcast_mode==BROADCAST_MODE.PERIODIC)
+                {
+                    MsgTemplate.data = ConvToBytes();
+                    Gp.sendQ.Enq(MsgTemplate);
+                    timer.ResetTimer();
+                }
+                else
+                {
+                    timer.ResetTimer();
+                }
             }
             else
             {   
@@ -46,6 +59,11 @@ public class messanger : MonoBehaviour
                 {
                     if(timer.Expired(Time.deltaTime))
                     {   
+                        if(broadcast_mode==BROADCAST_MODE.ONESHOT)
+                        {
+                            MsgTemplate.data = ConvToBytes();
+                            Gp.sendQ.Enq(MsgTemplate);
+                        }
                         enabled = false;
                         timer.ResetTimer();
                     }
@@ -61,8 +79,9 @@ public class messanger : MonoBehaviour
         }
     }
 
-    public void EnableMessanger()
+    public void EnableMessanger(BROADCAST_MODE brd_mode)
     {
+        broadcast_mode = brd_mode;
         enabled = true;
     }
 

@@ -28,4 +28,34 @@ namespace SerializeData
       return JsonUtility.ToJson(this);
     }
   }
+
+
+  [Serializable]
+  public class ForceCommand
+  {
+    public float F = 0.0f;
+    public float phsi = 0.0f;
+    public float a = 0.0f;
+    public float b = 0.0f;
+  
+    public ForceCommand(float f_,float phsi_,float a_,float b_)
+    {
+      F = f_;
+      phsi = phsi_;
+      a = a_;
+      b = b_;
+    }
+
+    public static ForceCommand getFc(String jsontext)
+    {
+      return JsonUtility.FromJson<ForceCommand>(jsontext);
+    }
+
+    public Vector3 ConvertToVector()
+    {
+      return new Vector3(F*Mathf.Cos(phsi),0.0f,F*Mathf.Sin(phsi));
+    }
+
+    
+  }
 }
