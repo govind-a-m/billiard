@@ -1,7 +1,7 @@
-from ThreadedClient import ThreadedClient as TdClient
-from ThreadedServer import ThreadedServer as TdServer
+from .ThreadedClient import ThreadedClient as TdClient
+from .ThreadedServer import ThreadedServer as TdServer
 import socket
-from MessageQ import SQEle
+from .MessageQ import SQEle
 import threading
 import time
 import json
@@ -46,9 +46,8 @@ if __name__=="__main__":
       for msg in pipeline.recvr.RecvAll():
         print(msg)
       time.sleep(0.5)
-    except e:
+    except:
       pipeline.close()
-      print(e)
       break
 
   # count = 0

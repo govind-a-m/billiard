@@ -1,5 +1,5 @@
 import threading
-from MessageQ import SendQ,SQEle
+from .MessageQ import SendQ,SQEle
 
 class ThreadedServer(threading.Thread):
 	def __init__(self,s):

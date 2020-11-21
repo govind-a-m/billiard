@@ -4,36 +4,6 @@ import numpy as np
 BallRadius = 0.5
 PocketRadius = 5
 
-class Table:
-  height = 43.941
-  half_width_inner = 0.61
-  half_width_outer = 0.66
-  half_length_inner = 0.128
-  half_length_outer = 0.135
-  half_mid_width = 0.62
-
-  def __init__(self,x,z,table_id):
-    cue = None
-    balls = {}
-    self.x = x
-    self.z = z
-    self.table_id = table_id
-    P1 = (((half_width_inner+half_width_outer)/2)+x,height,((half_length_inner+half_length_outer)/2)+y)
-    P2 = (half_mid_width+x,height,z)
-    Pockets = [Pocket(P1),
-               Pocket(P2),
-               Pocket((P1[0],P1[1],-1*P1[2])),
-               Pocket((-1*P1[0],P1[1],-1*P1[2])),
-               Pocket((-1*P2[0],P2[1],P2[2])),
-               Pocket((-1*P1[0],P1[1],P1[2]))
-              ]
-
-  
-  def update_ball_loc(self,ball_update_msg):
-    if ball_update_msg['BallName'] in self.balls:
-      self.balls[ball_update_msg['BallName']].update()
-    else:
-      self.balls[ball_update_msg['BallName']] = Ball(ball_update_msg['BallName'],ball_update_msg['x'],ball_update_msg['y'],ball_update_msg['z'])
 
 
 class Ball:
@@ -71,7 +41,7 @@ class Strike:
 
   def CalcShotAngle(self):
     self.target_vec = Segment(pocket.center,self.cue)
-    self.ghostball = self.target+Point3D(-2*self.cue.Radius*self.signof(self.signof(self.target.x)),self.target.y,-2*self.cue.Radius*self.signof(self.signof(self.target.z)))
+    self.ghostball = self.target+Point(-2*self.cue.Radius*self.signof(self.signof(self.target.x)),self.target.y,-2*self.cue.Radius*self.signof(self.signof(self.target.z)))
     self.aiming_vec = Segment(self.cue,self.ghostball)
     self.shotangle = self.aiming_vec.angle_between(self.target_vec).evalf()
     self.shotangle = None

@@ -1,5 +1,5 @@
 import threading
-from MessageQ import RecvQ,SQEle
+from .MessageQ import RecvQ,SQEle
 
 class ThreadedClient(threading.Thread):
   def __init__(self,s):
@@ -23,7 +23,7 @@ class ThreadedClient(threading.Thread):
 
   def RecvAll(self):
       while ret:=self.RecvOne():
-      yield ret
+        yield ret
 
   def stop(self):
     self.Running = False
