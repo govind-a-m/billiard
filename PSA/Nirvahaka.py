@@ -35,10 +35,8 @@ for strike in GenMoves(table):
 	strikes.append(strike)
 for strike in strikes:
 	if strike.valid:
-		if strike.target.BallName!="Ball1":
-			print(strike.target.BallName,strike.target.loc,strike.ghostball)
-			pipeline.sender.Send(commands.StrikeCmd(1, 100, float(strike.aiming_vec_ag), 0, 0))
-			break
+		print(strike.target.BallName,strike.target.loc,strike.ghostball)
+		pipeline.sender.Send(commands.StrikeCmd(1, 75, float(strike.aiming_vec_ag), 0, 0))
 pipeline.WaitForArrival()
 print(pipeline.recvr.RecvOne())
 
