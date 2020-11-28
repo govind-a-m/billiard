@@ -14,6 +14,7 @@ public class CueController : MonoBehaviour
   {
 		cue = GetComponent<Rigidbody>();
 		BallRadius = GetComponent<SphereCollider>().radius;
+		Debug.Log("cue controler active");
   }
 
 	public bool SimComplete
@@ -21,7 +22,8 @@ public class CueController : MonoBehaviour
 		get
 		{
 			if(cue.velocity.magnitude>MAX_RestingVel)
-			{
+			{	
+				Debug.Log(cue.velocity.magnitude.ToString());
 				return false;
 			}
 			else
@@ -33,14 +35,14 @@ public class CueController : MonoBehaviour
 
 	public void ApplyForce(ForceCommand fc)
 	{
-		cue.velocity = Vector3.zero;
+		// cue.velocity = Vector3.zero;
 		cue.rotation = Quaternion.identity;
 		Vector3 force_vec = fc.ConvertToVector();
 		Vector3 impact_loc = new Vector3(cue.position.x + BallRadius * Mathf.Cos(fc.phsi),
 																		 cue.position.y,
 																		 cue.position.z + BallRadius * Mathf.Sin(fc.phsi));
-		cue.AddForceAtPosition(force_vec, impact_loc, ForceMode.Impulse);
+		// cue.AddForceAtPosition(force_vec, impact_loc, ForceMode.VelocityChange);
+		cue.AddForce(force_vec,ForceMode.VelocityChange);
+		Debug.Log(force_vec.ToString()+" "+ impact_loc.ToString());
 	}
-
-
 }

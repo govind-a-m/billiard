@@ -1,7 +1,6 @@
 from .ThreadedClient import ThreadedClient as TdClient
 from .ThreadedServer import ThreadedServer as TdServer
 import socket
-from .MessageQ import SQEle
 import threading
 import time
 import json

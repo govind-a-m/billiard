@@ -103,10 +103,10 @@ public class BallController : MonoBehaviour
         // bring ball back to ground?
         rb.rotation = Quaternion.identity;
         Vector3 force_vec = GameProcess.Fc.ConvertToVector();
-        Vector3 impact_loc = new Vector3(gameObject.transform.position.x + BallRadius * Mathf.Cos(GameProcess.Fc.phsi),
+        Vector3 impact_loc = new Vector3(gameObject.transform.position.x - BallRadius * Mathf.Cos(GameProcess.Fc.phsi),
                                         gameObject.transform.position.y,
-                                        gameObject.transform.position.z + BallRadius * Mathf.Sin(GameProcess.Fc.phsi));
-        rb.AddForceAtPosition(force_vec, impact_loc, ForceMode.Impulse);
+                                        gameObject.transform.position.z - BallRadius * Mathf.Sin(GameProcess.Fc.phsi));
+        rb.AddForceAtPosition(force_vec, impact_loc, ForceMode.VelocityChange);
       }
     }
   }

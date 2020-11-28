@@ -1,5 +1,5 @@
 import threading
-from .MessageQ import SendQ,SQEle
+from .MessageQ import SendQ
 
 class ThreadedServer(threading.Thread):
 	def __init__(self,s):
@@ -13,11 +13,11 @@ class ThreadedServer(threading.Thread):
 		while self.Running:
 			self.Q.isnot_empty.wait()
 			msg = self.Q.get()
-			self.s.sendall(msg.data)
-			msg.ServiceCallback()
+			self.s.sendall(msg)
+			print('sent', msg)
 
-	def Send(self,msg,callback=lambda :None):
-		self.Q.put(SQEle(msg,callback))
+	def Send(self,msg):
+		self.Q.put(msg)
 
 	def stop(self):
 		self.Running = False

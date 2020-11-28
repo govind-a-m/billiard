@@ -29,6 +29,18 @@ namespace SerializeData
     }
   }
 
+  [Serializable]
+  public class SerializableTableData
+  {
+    [SerializeField]
+    public List<BallData> balls = new List<BallData>();
+    
+    public  SerializableTableData(List<BallData> tabledata)
+    {
+      balls = tabledata;
+    }
+
+  }
 
   [Serializable]
   public class ForceCommand

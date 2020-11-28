@@ -22,7 +22,9 @@ public class GameProcess : MonoBehaviour
   {
     foreach(String msg in pipeline.RecvAll())
 		{
+
 			String msg_type =  msg.Substring(0,10);
+      Debug.Log("recieved msg"+msg);
       if(msg_type == "STRIKE_CMD")
       {
         fc = ForceCommand.getFc(msg.Substring(10));
@@ -30,6 +32,7 @@ public class GameProcess : MonoBehaviour
         {
           tables[0].Fc = fc;
           tables[0].enabled = true;
+          Debug.Log("enabling table manager");
         }
       }
 		}
@@ -41,8 +44,6 @@ public class GameProcess : MonoBehaviour
 
   public static int NofRecvdMsgs
   {
-    get { return pipeline.recvQ.Q.Count; }
+    get { return pipeline.recvQ.Q.Count;}
   }
-
-
 }

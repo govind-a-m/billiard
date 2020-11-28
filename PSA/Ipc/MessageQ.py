@@ -1,13 +1,6 @@
 from queue import Queue
 import threading
 
-class SQEle:
-  def __init__(self,data,callback):
-    self.data = data
-    self.callback = callback
-
-  def ServiceCallback(self):
-    self.callback()
 
 class Qbase(Queue):
   def __init__(self):

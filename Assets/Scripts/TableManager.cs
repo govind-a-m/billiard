@@ -6,6 +6,7 @@ using SoftwareTimer;
 using SQ;
 using SerializeData;
 using System.Text;
+using System;
 
 public class TableManager : MonoBehaviour
 {
@@ -22,18 +23,25 @@ public class TableManager : MonoBehaviour
   public ForceCommand Fc;
   public int TableNo = 0;
   public CueController cueController;
+  public SerializableTableData serializable_tabledata;
 
-  void Start()
+
+  void Awake()
   {
-    rbBalls = gameObject.GetComponentsInChildren<Rigidbody>();
     TableData = new List<BallData>();
+    serializable_tabledata = new SerializableTableData(TableData);
     MsgTemplate = new SQEle(ConvToBytes(), DefaultCallback);
     enabled = false;
     timer = new Timer(WaitTimeVel);
-    Gp = GameProcess.pipeline;
-    GameProcess.tables.Add(this.TableNo,this);
     cueController = gameObject.transform.Find("CueBall").GetComponent<CueController>();
+    ballData = new BallData("init", Vector3.zero);
+    rbBalls = gameObject.GetComponentsInChildren<Rigidbody>();
+    GameProcess.tables.Add(TableNo, this);
+    UnityEngine.Debug.Log(GameProcess.tables[0]);
+
   }
+
+
 
   void FixedUpdate()
   {
@@ -42,6 +50,7 @@ public class TableManager : MonoBehaviour
     {
       netvel = netvel + rb.velocity.magnitude;
     }
+
     if (netvel < MAX_NetVelocity)
     {
       if (timer.status == "STARTED")
@@ -49,16 +58,12 @@ public class TableManager : MonoBehaviour
         if (timer.Expired(Time.deltaTime))
         {
           TableData.Clear();
-          foreach (Rigidbody rb in rbBalls)
+          foreach (Rigidbody rb in rbBalls)//check for null value in rbballs balls are destroyed after pcoketing 
           {
-            ballData.BallName = rb.gameObject.name;
-            ballData.x = rb.position.x;
-            ballData.y = rb.position.y;
-            ballData.z = rb.position.z;
-            TableData.Add(ballData);
+            TableData.Add(new BallData(rb.gameObject.name, rb.position));
           }
           MsgTemplate.data = ConvToBytes();
-          Gp.sendQ.Enq(MsgTemplate);
+          GameProcess.pipeline.sendQ.Enq(MsgTemplate);
           enabled = false;
           timer.ResetTimer();
         }
@@ -75,19 +80,29 @@ public class TableManager : MonoBehaviour
   }
 
   private void OnEnable()
-  {
-    if(cueController.SimComplete)
-    {
-      cueController.ApplyForce(Fc);
-    }
-    else
-    {
-      UnityEngine.Debug.Log("sim not complete");
-    }
+  { 
+
+    UnityEngine.Debug.Log(cueController);
+    cueController.ApplyForce(Fc);
+    // if(cueController.SimComplete)
+    // {
+    //   cueController.ApplyForce(Fc);
+    // }
+    // else
+    // {
+    //   UnityEngine.Debug.Log("sim not complete");
+    // }
   }
+  private String SerializeTableData()
+  {
+    return JsonUtility.ToJson(TableData);
+  }
+
   private byte[] ConvToBytes()
   {
-    return Encoding.ASCII.GetBytes(JsonUtility.ToJson(TableData) + "END_OF_MSG");
+    serializable_tabledata.balls = TableData;
+    UnityEngine.Debug.Log(JsonUtility.ToJson(serializable_tabledata) + "END_OF_MSG");
+    return Encoding.ASCII.GetBytes(JsonUtility.ToJson(serializable_tabledata) + "END_OF_MSG");
   }
 
   public void DefaultCallback()

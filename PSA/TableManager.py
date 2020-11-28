@@ -1,4 +1,4 @@
-from PSA.PickPocket.MoveGenerator.DirectMoveGenerator import Ball,Pocket
+from PickPocket.MoveGenerator.DirectMoveGenerator import Ball,Pocket
 import threading
 
 class TableManager:
@@ -7,24 +7,20 @@ class TableManager:
 
   def __init__(self):
     pass
-  
-  @classmethod
-  def UpdateTable(cls,table_id,update_msg):
-    cls.table[table_id].update_ball_loc(update_msg)
 
   @classmethod
-  def new(cls):
-    cls.cnt += 1
-    table = Table(cls.cnt)
-    cls.tables[cls.cnt] = table
+  def new(cls,sim_result):
+    cls.count += 1
+    cls.tables[cls.count] = Table(cls.count,sim_result)
+    return cls.tables[cls.count]
 
 class Table:
-  height = 43.941
-  half_width_inner = 0.61
-  half_width_outer = 0.66
-  half_length_inner = 0.128
-  half_length_outer = 0.135
-  half_mid_width = 0.62
+  height = 0.54
+  half_width_inner = 8.875
+  half_width_outer = 9.85
+  half_length_inner = 18.775
+  half_length_outer = 19.7
+  half_mid_width = (half_width_inner+half_width_outer)/2
   P1 = (((half_width_inner+half_width_outer)/2),height,((half_length_inner+half_length_outer)/2))
   P2 = (half_mid_width,height,0)
   pockets = [Pocket(P1),
@@ -35,13 +31,16 @@ class Table:
              Pocket((-1*P1[0],P1[1],P1[2]))
             ]
 
-  def __init__(self,table_id):
-    cue = None
-    balls = {}
+  def __init__(self,table_id,sim_result):
     self.table_id = table_id
+    self.balls = {}
+    for balldata in sim_result:
+      if balldata['BallName']!="CueBall":
+        self.balls[balldata['BallName']] = Ball(**balldata)
+      else:
+        self.cue = Ball(**balldata)
+
+  def __repr__(self):
+    return f'balls:{self.balls},cue:{self.cue},table_id:{self.table_id}'
+
   
-  def update_ball_loc(self,ball_update_msg):
-    if ball_update_msg['BallName'] in self.balls:
-      self.balls[ball_update_msg['BallName']].update()
-    else:
-      self.balls[ball_update_msg['BallName']] = Ball(ball_update_msg['BallName'],ball_update_msg['x'],ball_update_msg['y'],ball_update_msg['z'])

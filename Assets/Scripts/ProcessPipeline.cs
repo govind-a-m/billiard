@@ -57,7 +57,7 @@ public class ProcessPipeline
 
   private void StartSendThread()
   {
-    byte[] byteData = Encoding.ASCII.GetBytes("Started Send Thread");
+    byte[] byteData = SQEle.ConvertToBytes("started send thread");
     SQEle msg = new SQEle(byteData, testcallback);
     sendQ.Enq(msg);
     SQEle msg_ = sendQ.next();

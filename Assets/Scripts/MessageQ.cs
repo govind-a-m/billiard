@@ -26,6 +26,12 @@ namespace SQ
     {
       callBack();
     }
+
+    public static byte[] ConvertToBytes(String serialized_obj)
+    {
+      return Encoding.ASCII.GetBytes(serialized_obj+ "END_OF_MSG");
+    }
+
   }
 
   public class SendQ
@@ -59,6 +65,8 @@ namespace SQ
       Q.Enqueue("STOP");
       EnqEvent.Set();
     }
+
+
   }
 
   public class RecvQ

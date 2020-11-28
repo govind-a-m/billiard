@@ -1,5 +1,5 @@
 import threading
-from .MessageQ import RecvQ,SQEle
+from .MessageQ import RecvQ
 
 class ThreadedClient(threading.Thread):
   def __init__(self,s):
