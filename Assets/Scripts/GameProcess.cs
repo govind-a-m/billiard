@@ -20,23 +20,35 @@ public class GameProcess : MonoBehaviour
 
   void Update()
   {
-    foreach(String msg in pipeline.RecvAll())
-		{
+    // foreach(String msg in pipeline.RecvAll())
+		// {
 
-			String msg_type =  msg.Substring(0,10);
-      Debug.Log("recieved msg"+msg);
-      if(msg_type == "STRIKE_CMD")
-      {
-        fc = ForceCommand.getFc(msg.Substring(10));
-        if(fc.F>0.0f)
-        {
-          tables[0].Fc = fc;
-          tables[0].enabled = true;
-          Debug.Log("enabling table manager");
-        }
-      }
-		}
+		// 	String msg_type =  msg.Substring(0,10);
+    //   Debug.Log("recieved msg"+msg);
+    //   switch(msg_type)
+    //   {
+    //     case "STRIKE_CMD":
+
+    //       break;
+
+    //   }
+    //   if(msg_type == "STRIKE_CMD")
+    //   {
+
+    //   }
+		// }
   }
+
+  private void PassOnStrikeCmd(String msg)
+  {
+    fc = ForceCommand.getFc(msg);
+    if(fc.F>0.0f)
+    {
+      tables[0].Fc = fc;
+      tables[0].enabled = true;
+    }
+  }
+
   private void OnDestroy()
   {
     pipeline.EndSendThread();

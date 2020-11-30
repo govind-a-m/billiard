@@ -3,7 +3,7 @@ import Ipc.commands as commands
 from TableManager import TableManager
 import threading
 import pickle
-from PickPocket.MoveGenerator.DirectMoveGenerator import Strike, GenMoves
+from PickPocket.MoveGenerator.DirectMoveGenerator import Move, GenMoves
 import time
 import json
 

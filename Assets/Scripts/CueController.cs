@@ -14,7 +14,6 @@ public class CueController : MonoBehaviour
   {
 		cue = GetComponent<Rigidbody>();
 		BallRadius = GetComponent<SphereCollider>().radius;
-		Debug.Log("cue controler active");
   }
 
 	public bool SimComplete

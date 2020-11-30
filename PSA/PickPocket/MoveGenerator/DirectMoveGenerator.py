@@ -27,7 +27,7 @@ class Pocket:
     return f'Pocket({self.center})'
 
 
-class Strike:
+class Move:
   MIN_AngleOfStrike = np.pi-((86*np.pi)/180)
   GHOSTBALL_CLS_FACTOR = 1
   def __init__(self,cue=None,pocket=None,target=None):
@@ -125,6 +125,23 @@ class Strike:
 def GenMoves(table):
   for target in table.balls.values():
     for pocket in table.pockets:
-      strike = Strike(table.cue,pocket,target)
-      yield strike
+      yield Move(table.cue,pocket,target)
 
+class Strike:
+  v_step = 10
+  v_min = 10
+  v_max = 200
+  a_step = 0.1
+  a_min = 0.01
+  a_max = 0.41
+  b_min = 
+  
+  def __init__(move,v,a,b):
+    self.move = move
+    self.v = v
+    self.a = a
+    self.b = b
+  
+  @classmethod
+  def GenStrikes(move):
+    

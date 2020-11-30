@@ -36,9 +36,9 @@ public class TableManager : MonoBehaviour
     cueController = gameObject.transform.Find("CueBall").GetComponent<CueController>();
     ballData = new BallData("init", Vector3.zero);
     rbBalls = gameObject.GetComponentsInChildren<Rigidbody>();
-    GameProcess.tables.Add(TableNo, this);
+    var tableno_str = gameObject.transform.parent.name.Split('_')[1];
+    GameProcess.tables.Add(int.Parse(tableno_str), this);
     UnityEngine.Debug.Log(GameProcess.tables[0]);
-
   }
 
 

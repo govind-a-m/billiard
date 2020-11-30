@@ -19,7 +19,7 @@ namespace SerializeData
     {
       BallName = ballname;
       x = position.x;
-      y = position.y;
+      // y = position.y;
       z = position.z;
     }
 
@@ -39,7 +39,6 @@ namespace SerializeData
     {
       balls = tabledata;
     }
-
   }
 
   [Serializable]
@@ -69,7 +68,5 @@ namespace SerializeData
     {
       return new Vector3(F * Mathf.Cos(phsi), 0.0f, F * Mathf.Sin(phsi));
     }
-
-
   }
 }
