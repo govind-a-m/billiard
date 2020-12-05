@@ -12,7 +12,6 @@ namespace SerializeData
   {
     public String BallName = String.Empty;
     public float x = 0.0f;
-    public float y = 0.0f;
     public float z = 0.0f;
 
     public BallData(String ballname, Vector3 position)
@@ -69,4 +68,37 @@ namespace SerializeData
       return new Vector3(F * Mathf.Cos(phsi), 0.0f, F * Mathf.Sin(phsi));
     }
   }
+
+  [Serializable]
+  public class SimGameState
+  {
+    [SerializeField]
+    public List<BallData> balls;
+    [SerializeField]
+    public ForceCommand force;
+
+    public SimGameState(List<BallData> table_data,ForceCommand fc)
+    {
+      balls = table_data;
+      force =fc;
+    }
+
+    public static SimGameState get_SGState(String jsontext)
+    {
+      return JsonUtility.FromJson<SimGameState>(jsontext);
+    }
+
+    public static void jsonprototype()
+    {
+      BallData ball1 = new BallData("ball1",new Vector3(1.0F,2.0F,3.0F));
+      BallData ball2 = new BallData("ball1",new Vector3(4.0F,5.0F,6.0F));
+      List<BallData> ballist = new List<BallData>();
+      ballist.Add(ball1);
+      ballist.Add(ball2);
+      ForceCommand f1 = new ForceCommand(1000F,1080F,0.0F,0.0F,1);
+      SimGameState sg_state = new SimGameState(ballist,f1);
+      Debug.Log(JsonUtility.ToJson(sg_state));
+    }
+  }
+
 }

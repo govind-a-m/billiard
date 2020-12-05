@@ -26,3 +26,22 @@ def StrikeCmd(table_id,force,phsi,a,b):
         }
   return ConvertTobytes('STRIKE_CMD',cmd,'END_OF_MSG')
 
+def EncodeStrike(strike):
+  return StrikeCmd(strike.gametable_id,strike.v,strike.aiming_vec_ag,strike.a,strike.b)
+
+def EncodeSGState(table,strike):
+  balls = []
+  for ball in table.balls.values():
+    balls.append({"BallName":ball.BallName,"x":float(ball.loc.x),"z":float(ball.loc.y)})
+  balls.append({"BallName":table.cue.BallName,"x":float(table.cue.loc.x),"z":float(table.cue.loc.y)})
+  cmd = {
+          "balls" : balls,
+          "force" : {
+                      'F' : float(strike.v),
+                      'phsi' : float(strike.aiming_vec_ag),
+                      'a' : strike.a,
+                      'b' : strike.b,
+                      'table_id':strike.gametable_id
+                    }
+        }
+  return ConvertTobytes('RST_STRIKE',cmd,'END_OF_MSG')

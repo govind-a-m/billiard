@@ -18,14 +18,14 @@ public class PocketController : MonoBehaviour
 		foreach (var transform in Balls.GetComponentsInChildren<Transform>()) 
 		{
 			if (transform.name == collision.gameObject.name) 
-			{	Debug.Log(collision.gameObject.name);
+			{	
 				if (cueBall.transform.name == collision.gameObject.name) 
 				{
 					cueBall.transform.position = originalCueBallPosition;
 				}
 				else
 				{
-					GameObject.Destroy(collision.gameObject);
+					collision.gameObject.SetActive(false);
 				}
 			}
 		}

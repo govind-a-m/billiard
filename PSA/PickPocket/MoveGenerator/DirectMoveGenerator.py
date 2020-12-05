@@ -2,10 +2,9 @@ from sympy import Point,Line,Segment
 import numpy as np
 import math
 
+
 BallRadius = 0.5
 PocketRadius = 5
-
-
 
 class Ball:
   Radius = BallRadius
@@ -30,6 +29,9 @@ class Pocket:
 class Move:
   MIN_AngleOfStrike = np.pi-((86*np.pi)/180)
   GHOSTBALL_CLS_FACTOR = 1
+  CONST_P1 = 1.602
+  CONST_P2 = 20.49
+
   def __init__(self,cue=None,pocket=None,target=None):
     self.cue = cue
     self.pocket = pocket
@@ -39,7 +41,14 @@ class Move:
     self.aiming_vec = None
     self.shotangle = None
     self.valid = False
-  
+    self.target_vel = 0
+    self.v = 0
+    self.VStrikes = []
+    self.SimResultTable = None
+    self.gametable_id = None
+    self.a = 0
+    self.b = 0
+    
   def CalcShotAngle(self):
     shifted_pckt = self.pocket.center-self.target.loc
     self.ghostball = (self.target.loc+self.cue.Diameter*(self.target.loc-self.pocket.center)/self.pocket.center.distance(self.target.loc)).evalf()
@@ -51,8 +60,6 @@ class Move:
     if shifted_ghost.x<0:
       self.aiming_vec_ag = math.pi+self.aiming_vec_ag
 
-
-
   def CheckValidity(self,table):
     if self.shotangle>self.MIN_AngleOfStrike:
       for ball in table.balls.values():
@@ -63,10 +70,61 @@ class Move:
             self.valid = False
             return f'{ball.BallName} adda ide'
       self.valid = True
+      self.CalcMinVelocity_reqd()
       return f'hodi tondare illa'
     return 'shotangle not valid'
 
-  # def CalcShotAngle(self):
+  @staticmethod
+  def signof(x):
+    return 1 if x>0 else -1
+  
+  def CalcMinVelocity_reqd(self):
+    self.target_vel = self.CONST_P1*self.target_vec.length+self.CONST_P2##from VDModel
+    self.impact_vel = 2*self.target_vel*math.cos(math.pi-self.shotangle)##conservation of momentum in 2D same ball mass ans elastic collission
+    self.v = self.impact_vel+(self.CONST_P1*self.aiming_vec.length+self.CONST_P2)
+
+  def SpawnVStrikes(self):
+    self.VStrikes = []
+    for i in range(abs((VStrike.v_max-self.v)//VStrike.v_step)):
+      self.VStrikes.append(VStrike(self.v+i*VStrike.v_step,self.aiming_vec_ag))
+
+  def __repr__(self):
+    return ','.join(f'{key}:{value}' for key,value in self.__dict__.items())
+
+
+class VStrike:
+  v_step = 10
+  v_max = 250
+
+  def __init__(self,v,phsi):
+    self.v = v
+    self.a = 0.0
+    self.b = 0.0
+    self.VRStrikes = []
+    self.gametable_id = None
+    self.aiming_vec_ag = phsi
+
+
+  def SpawnVRStrikes(self):
+    self.VRStrikes = []
+    for i in range(1,VRStrikes.a_len):
+      for j in range(1,VRStrikes.a_len):
+        self.VRStrikes.append(VRStrike(self.v,VRStrike.a_min+i*VRStrike.a_step,VRStrike.a_min+j*VRStrike.a_step,self.aiming_vec_ag))
+
+class VRStrike:
+  a_step = 0.23
+  a_min = 0
+  a_len = 3
+  
+  def __init__(self,v,a,b,phsi):
+    self.v = v
+    self.a = a
+    self.b = b
+    self.gametable_id = None
+    self.aiming_vec_ag = phsi
+
+
+    # def CalcShotAngle(self):
   #   shifted_pckt = self.pocket.center-self.target.loc
   #   self.ghostball = (self.target.loc+self.cue.Diameter*(self.target.loc-self.pocket.center)/self.pocket.center.distance(self.target.loc))
   #   self.aiming_vec = Line(self.cue.loc,self.ghostball)
@@ -112,36 +170,3 @@ class Move:
   #     self.valid = True
   #     return f'hodi tondare illa'
   #   return 'shotangle not valid'
-
-  @staticmethod
-  def signof(x):
-    return 1 if x>0 else -1
-  
-  
-  def __repr__(self):
-    return ','.join(f'{key}:{value}' for key,value in self.__dict__.items())
-
-
-def GenMoves(table):
-  for target in table.balls.values():
-    for pocket in table.pockets:
-      yield Move(table.cue,pocket,target)
-
-class Strike:
-  v_step = 10
-  v_min = 10
-  v_max = 200
-  a_step = 0.1
-  a_min = 0.01
-  a_max = 0.41
-  b_min = 
-  
-  def __init__(move,v,a,b):
-    self.move = move
-    self.v = v
-    self.a = a
-    self.b = b
-  
-  @classmethod
-  def GenStrikes(move):
-    

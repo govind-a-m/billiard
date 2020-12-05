@@ -9,7 +9,7 @@ public class CameraMover : MonoBehaviour
 	public static Dictionary<String,Vector3> tables = new Dictionary<string, Vector3>();
 	private Transform child;
 	public Vector3 BirdEyeLocation;
-	public float CameraHeightFromTable = 45;
+	public static float CameraHeightFromTable = 75;
 	public String SelectedTable;
 	public enum View
 	{
@@ -17,7 +17,7 @@ public class CameraMover : MonoBehaviour
 		CAMERA_GLOBAL
 	}
 	public View camera_view = View.CAMERA_GLOBAL;
-	private Vector3 HeightVec = new Vector3(0.0f,45,0.0f);
+	private Vector3 HeightVec = new Vector3(0.0f,CameraHeightFromTable,0.0f);
 
 	void Start()
   {

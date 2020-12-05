@@ -1,5 +1,4 @@
 from collections import namedtuple
-from PickPocket.MoveGenerator.DirectMoveGenerator import Strike, GenMoves
 
 Total_No_Of_Tables = 40
 Name_Suffix = "GameTable_"
@@ -18,7 +17,7 @@ class GameTable:
 
   @classmethod
   def Init(cls):
-    for i in range(1,Total_No_Of_Tables+1):
+    for i in range(2,Total_No_Of_Tables+1):
       cls.tables[Name_Suffix+str(i)] = TableMap(cls(Name_Suffix+str(i)),None)
       cls.ActiveList.append(Name_Suffix+str(i))
   

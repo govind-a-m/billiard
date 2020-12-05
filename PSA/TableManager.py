@@ -1,5 +1,4 @@
-from PickPocket.MoveGenerator.DirectMoveGenerator import Ball,Pocket
-import threading
+from PickPocket.MoveGenerator.DirectMoveGenerator import Ball,Pocket,Move
 
 class TableManager:
   tables = {}
@@ -34,11 +33,19 @@ class Table:
   def __init__(self,table_id,sim_result):
     self.table_id = table_id
     self.balls = {}
+    self.moves = []
     for balldata in sim_result:
       if balldata['BallName']!="CueBall":
         self.balls[balldata['BallName']] = Ball(balldata['BallName'],balldata['x'],balldata['z'])
       else:
         self.cue = Ball(balldata['BallName'],balldata['x'],balldata['z'])
+
+  def SpawnMoves(self):
+    self.moves = []
+    for target in self.balls.values():
+      for pocket in self.pockets:
+        move =  Move(self.cue,pocket,target)
+        self.moves.append(move)
 
   def __repr__(self):
     return f'balls:{self.balls},cue:{self.cue},table_id:{self.table_id}'

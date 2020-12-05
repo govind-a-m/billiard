@@ -11,7 +11,7 @@ using System;
 public class TableManager : MonoBehaviour
 {
   public List<BallData> TableData;
-  public Rigidbody[] rbBalls;
+  public Dictionary<String,Rigidbody> rbBalls = new Dictionary<string, Rigidbody>();
   public static ProcessPipeline Gp;
   private Transform[] ts;
   public float MAX_NetVelocity = 0.1f;
@@ -24,6 +24,7 @@ public class TableManager : MonoBehaviour
   public int TableNo = 0;
   public CueController cueController;
   public SerializableTableData serializable_tabledata;
+  public float posball_y;
 
 
   void Awake()
@@ -35,10 +36,14 @@ public class TableManager : MonoBehaviour
     timer = new Timer(WaitTimeVel);
     cueController = gameObject.transform.Find("CueBall").GetComponent<CueController>();
     ballData = new BallData("init", Vector3.zero);
-    rbBalls = gameObject.GetComponentsInChildren<Rigidbody>();
+    foreach(Rigidbody rb in gameObject.GetComponentsInChildren<Rigidbody>())
+    {
+      rbBalls.Add(rb.gameObject.name,rb);
+    }
+    posball_y = rbBalls["CueBall"].position.y;
     var tableno_str = gameObject.transform.parent.name.Split('_')[1];
-    GameProcess.tables.Add(int.Parse(tableno_str), this);
-    UnityEngine.Debug.Log(GameProcess.tables[0]);
+    GameProcess.tables[int.Parse(tableno_str)-1] = this;
+    //UnityEngine.Debug.Log(GameProcess.tables[0]);
   }
 
 
@@ -46,7 +51,7 @@ public class TableManager : MonoBehaviour
   void FixedUpdate()
   {
     netvel = 0.0f;
-    foreach (Rigidbody rb in rbBalls)
+    foreach (Rigidbody rb in rbBalls.Values)
     {
       netvel = netvel + rb.velocity.magnitude;
     }
@@ -58,9 +63,17 @@ public class TableManager : MonoBehaviour
         if (timer.Expired(Time.deltaTime))
         {
           TableData.Clear();
-          foreach (Rigidbody rb in rbBalls)//check for null value in rbballs balls are destroyed after pcoketing 
-          {
-            TableData.Add(new BallData(rb.gameObject.name, rb.position));
+          foreach (Rigidbody rb in rbBalls.Values)
+          { 
+            if(rb.gameObject.activeSelf)
+            {
+              TableData.Add(new BallData(rb.gameObject.name, rb.position));
+            }
+            else
+            {
+              TableData.Add(new BallData(rb.gameObject.name, new Vector3(9999.0F,0.0F,9999.0F)));
+            }
+            
           }
           MsgTemplate.data = ConvToBytes();
           GameProcess.pipeline.sendQ.Enq(MsgTemplate);
@@ -79,10 +92,21 @@ public class TableManager : MonoBehaviour
     }
   }
 
+  public void SetTable(List<BallData> balls)
+  { 
+    foreach(Rigidbody rb in rbBalls.Values)
+    {
+      rb.gameObject.SetActive(false);
+    }
+    foreach(BallData ball in balls)
+    {
+      rbBalls[ball.BallName].gameObject.SetActive(true);
+      rbBalls[ball.BallName].position = new Vector3(ball.x,posball_y,ball.z);
+    }
+  }
+
   private void OnEnable()
   { 
-
-    UnityEngine.Debug.Log(cueController);
     cueController.ApplyForce(Fc);
     // if(cueController.SimComplete)
     // {
