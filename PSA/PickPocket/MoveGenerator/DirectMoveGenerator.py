@@ -5,6 +5,7 @@ import math
 
 BallRadius = 0.5
 PocketRadius = 5
+logging = None
 
 class Ball:
   Radius = BallRadius
@@ -48,6 +49,7 @@ class Move:
     self.gametable_id = None
     self.a = 0
     self.b = 0
+    self.impact_vel = 0
     
   def CalcShotAngle(self):
     shifted_pckt = self.pocket.center-self.target.loc
@@ -59,6 +61,7 @@ class Move:
     self.aiming_vec_ag = math.atan(shifted_ghost.y/shifted_ghost.x)
     if shifted_ghost.x<0:
       self.aiming_vec_ag = math.pi+self.aiming_vec_ag
+    
 
   def CheckValidity(self,table):
     if self.shotangle>self.MIN_AngleOfStrike:

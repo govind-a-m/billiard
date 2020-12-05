@@ -25,7 +25,7 @@ public class TableManager : MonoBehaviour
   public CueController cueController;
   public SerializableTableData serializable_tabledata;
   public float posball_y;
-
+  private Vector3 TablePosition;
 
   void Awake()
   {
@@ -43,6 +43,8 @@ public class TableManager : MonoBehaviour
     posball_y = rbBalls["CueBall"].position.y;
     var tableno_str = gameObject.transform.parent.name.Split('_')[1];
     GameProcess.tables[int.Parse(tableno_str)-1] = this;
+    TablePosition = gameObject.transform.parent.transform.position;
+    TablePosition.y += posball_y;
     //UnityEngine.Debug.Log(GameProcess.tables[0]);
   }
 
@@ -67,7 +69,7 @@ public class TableManager : MonoBehaviour
           { 
             if(rb.gameObject.activeSelf)
             {
-              TableData.Add(new BallData(rb.gameObject.name, rb.position));
+              TableData.Add(new BallData(rb.gameObject.name, rb.position-TablePosition));
             }
             else
             {
@@ -101,7 +103,7 @@ public class TableManager : MonoBehaviour
     foreach(BallData ball in balls)
     {
       rbBalls[ball.BallName].gameObject.SetActive(true);
-      rbBalls[ball.BallName].position = new Vector3(ball.x,posball_y,ball.z);
+      rbBalls[ball.BallName].position = new Vector3(ball.x,0.0f,ball.z)+TablePosition;
     }
   }
 

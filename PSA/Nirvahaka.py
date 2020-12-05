@@ -5,10 +5,12 @@ from GameTree import GameTree,GameState
 import time
 import json
 
+
+
 pipeline = PipeLine() 
-gametree = GameTree()
 pipeline.open()
-pipeline.WaitForArrival() # wait for starting send thread message
+pipeline.WaitForArrival()
+gametree = GameTree()
 for msg in pipeline.recvr.RecvAll():
 	print(msg)
 enc_msg = commands.EncodeStrike(gametree.root.moves[0])
@@ -21,16 +23,17 @@ simresult = json.loads(msg)['balls']
 gametree.root.moves[0].SimResultTable = TableManager.new(simresult)
 table = gametree.root.moves[0].SimResultTable
 table.SpawnMoves()
+idx = 0
 for move in table.moves:
 	move.CalcShotAngle()
-	print(move.shotangle,move.CheckValidity(table),move.pocket.center,move.target.BallName)
-for move in table.moves:
+	move.CheckValidity(table)
+	print(move.shotangle,move.target.BallName,move.v,move.target_vel,move.impact_vel)
 	if move.valid:
-		move.gametable_id = 1
+		idx = idx+1
+		move.gametable_id = idx
 		cmd = commands.EncodeSGState(table,move)
-		print(cmd)
 		pipeline.sender.Send(cmd)
-		break
+
 
 
 # pipeline.sender.Send(commands.StrikeCmd(1, 300, 1.570796, 0, 0))
