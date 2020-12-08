@@ -1,6 +1,6 @@
 from sympy import Segment,Point,Line
 import math
-from PickPocket.MoveGenerator.DirectMoveGenerator import  Move,VRStrike,VStrike
+from PickPocket.MoveGenerator.DirectMoveGenerator import Move,VRStrike,VStrike
 import Ipc.commands as commands
 
 starting_shot = Move()
@@ -11,7 +11,7 @@ starting_shot.gametable_id = 0
 
 class GameTree:
 
-  def __init__(self,force_vel=500,table_id=0):
+  def __init__(self,force_vel=750,table_id=0):
     self.root = GameState()
     starting_shot.v = force_vel
     starting_shot.gametable_id = table_id

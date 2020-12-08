@@ -53,7 +53,7 @@ class Move:
     
   def CalcShotAngle(self):
     shifted_pckt = self.pocket.center-self.target.loc
-    self.ghostball = (self.target.loc+self.cue.Diameter*(self.target.loc-self.pocket.center)/self.pocket.center.distance(self.target.loc)).evalf()
+    self.ghostball = (self.target.loc+self.cue.Diameter*(self.target.loc-self.pocket.center)/self.pocket.center.distance(self.target.loc))
     self.aiming_vec = Segment(self.cue.loc,self.ghostball)
     self.target_vec = Segment(self.pocket.center,self.ghostball)
     self.shotangle = self.aiming_vec.angle_between(self.target_vec).evalf()
@@ -110,8 +110,8 @@ class VStrike:
 
   def SpawnVRStrikes(self):
     self.VRStrikes = []
-    for i in range(1,VRStrikes.a_len):
-      for j in range(1,VRStrikes.a_len):
+    for i in range(1,VRStrike.a_len):
+      for j in range(1,VRStrike.a_len):
         self.VRStrikes.append(VRStrike(self.v,VRStrike.a_min+i*VRStrike.a_step,VRStrike.a_min+j*VRStrike.a_step,self.aiming_vec_ag))
 
 class VRStrike:
