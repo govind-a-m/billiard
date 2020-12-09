@@ -15,7 +15,7 @@
 #define P2_0 half_mid_width
 #define P2_1 0
 
-#define MIN_AngleOfStrike M_PI-((86*M_PI)/180)
+#define MIN_AngleOfStrike ((86*M_PI)/180)
 #define CONST_P1 1.602
 #define CONST_P2 20.49
 
@@ -34,6 +34,7 @@ enum ballname
   Ball4,
   Ball5,
   Ball6,
+
 };
 
 struct Vector
@@ -44,29 +45,32 @@ struct Vector
 
 struct  Ball
 {
-  ballname name;
-  Point position;
+  int ballidx;
+  struct Point position;
+  bool valid;
 };
 
 struct Segment
 {
-  Point from;
-  Point to;
+  struct Point from;
+  struct Point to;
+  struct Vector vec;
   double length;
 };
 
 struct Move
 {
-  Ball cue;
-  Point pocket;
-  Ball target;
-  Point ghostball;
-  Segment target_vec;
-  Segment aiming_vec;
+  struct Ball cue;
+  struct Point pocket;
+  struct Ball target;
+  struct Point ghostball;
+  struct Segment target_vec;
+  struct Segment aiming_vec;
   double shotangle;
-  bool valid;
+  int valid;
   double target_vel;
   double v;
   double impact_vel;
+  double aiming_vec_ag;
 };
 
