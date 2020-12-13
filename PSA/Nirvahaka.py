@@ -1,7 +1,12 @@
-from Ipc.PipeLine import PipeLine
+try:
+	from Ipc.PipeLine import PipeLine
+	from TableManager import TableManager
+	from GameTree import GameTree,GameState
+except:
+	from .Ipc.PipeLine import PipeLine
+	from .TableManager import TableManager
+	from .GameTree import GameTree,GameState
 import Ipc.commands as commands
-from TableManager import TableManager
-from GameTree import GameTree,GameState
 import time
 import json
 
@@ -27,12 +32,14 @@ idx = 0
 for move in table.moves:
 	move.CalcShotAngle()
 	move.CheckValidity(table)
-	print(move.shotangle,move.target.BallName,move.v,move.target_vel,move.impact_vel)
-	if move.valid:
+	if move.valid==0:
 		idx = idx+1
 		move.gametable_id = idx
 		cmd = commands.EncodeSGState(table,move)
 		pipeline.sender.Send(cmd)
+		print(move.valid,move.pocket,move.shotangle,move.target.BallName,
+					move.v,move.target_vel,move.impact_vel,
+					move.cMove.min_dst_to_aiming_line,move.cMove.min_dst_to_target_line)
 
 
 

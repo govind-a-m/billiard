@@ -14,7 +14,7 @@ class ThreadedServer(threading.Thread):
 			self.Q.isnot_empty.wait()
 			msg = self.Q.get()
 			self.s.sendall(msg)
-			print('sent', msg)
+		
 
 	def Send(self,msg):
 		self.Q.put(msg)

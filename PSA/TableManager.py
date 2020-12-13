@@ -1,4 +1,7 @@
-from PickPocket.MoveGenerator.DirectMoveGenerator import Ball,Pocket,Move
+try:
+  from PickPocket.MoveGenerator.DirectMoves import Ball,pocket,Move
+except:
+  from .PickPocket.MoveGenerator.DirectMoves import Ball,pocket,Move
 
 class TableManager:
   tables = {}
@@ -22,12 +25,12 @@ class Table:
   half_mid_width = (half_width_inner+half_width_outer)/2
   P1 = (((half_width_inner+half_width_outer)/2),((half_length_inner+half_length_outer)/2))
   P2 = (half_mid_width,0)
-  pockets = [Pocket(P1),
-             Pocket(P2),
-             Pocket((P1[0],-1*P1[1])),
-             Pocket((-1*P1[0],-1*P1[1])),
-             Pocket((-1*P2[0],P2[1])),
-             Pocket((-1*P1[0],P1[1]))
+  pockets = [pocket(*P1),
+             pocket(*P2),
+             pocket(P1[0],-1*P1[1]),
+             pocket(-1*P1[0],-1*P1[1]),
+             pocket(-1*P2[0],P2[1]),
+             pocket(-1*P1[0],P1[1])
             ]
 
   def __init__(self,table_id,sim_result):

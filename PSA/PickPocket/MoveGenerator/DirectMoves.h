@@ -1,8 +1,11 @@
 #include <math.h>
 
+#ifndef M_PI 
+#define M_PI acos(-1.0)
+#endif
 // Ball parameters
 #define BallRadius 0.5
-#define BallDiameter 1
+#define BallDiameter 1.00
 
 // Table measurements
 #define half_width_inner 8.875
@@ -47,7 +50,6 @@ struct  Ball
 {
   int ballidx;
   struct Point position;
-  bool valid;
 };
 
 struct Segment
@@ -67,10 +69,21 @@ struct Move
   struct Segment target_vec;
   struct Segment aiming_vec;
   double shotangle;
-  int valid;
+  unsigned long valid;
   double target_vel;
   double v;
   double impact_vel;
   double aiming_vec_ag;
+  double min_dst_to_aiming_line;
+  double min_dst_to_target_line;
 };
 
+void CalcShotAngle(struct Move* move);
+void CheckValidity(struct Move* move,struct Ball* ball,int nof_balls);
+void CalcMinVelocity_reqd(struct Move* move);
+void ComputeSegmentVec(struct Segment* seg);
+double AngleBtwVectors(struct Vector vec1,struct Vector vec2);
+double VectorLength(struct Vector vec);
+double distance(struct Point p1,struct Point p2);
+double VectorDot(struct Vector vec1,struct Vector vec2);
+double PerpSegment(struct Segment seg,struct Point p);

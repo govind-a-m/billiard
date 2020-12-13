@@ -32,8 +32,8 @@ def EncodeStrike(strike):
 def EncodeSGState(table,strike):
   balls = []
   for ball in table.balls.values():
-    balls.append({"BallName":ball.BallName,"x":float(ball.loc.x),"z":float(ball.loc.y)})
-  balls.append({"BallName":table.cue.BallName,"x":float(table.cue.loc.x),"z":float(table.cue.loc.y)})
+    balls.append({"BallName":ball.BallName,"x":float(ball.x),"z":float(ball.y)})
+  balls.append({"BallName":table.cue.BallName,"x":float(table.cue.x),"z":float(table.cue.y)})
   cmd = {
           "balls" : balls,
           "force" : {
