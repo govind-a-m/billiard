@@ -1,37 +1,38 @@
+from queue import Queue
 from collections import namedtuple
 
-Total_No_Of_Tables = 40
-Name_Suffix = "GameTable_"
+MoveIdfy = namedtuple('MoveIdfy',['move','depth','index'])
 
-TableMap = namedtuple('gametable','table_id')
+Total_No_Of_Tables = 40
 
 class GameTable:
-  tables = {}
-  GameTable_Table = {}
-  ActiveList = []
-
-  def __init__(self,name):
-    self.name = name
-    self.active = False
-    self.AssignedTable = None
-
-  @classmethod
-  def Init(cls):
-    for i in range(2,Total_No_Of_Tables+1):
-      cls.tables[Name_Suffix+str(i)] = TableMap(cls(Name_Suffix+str(i)),None)
-      cls.ActiveList.append(Name_Suffix+str(i))
   
-  @classmethod
-  def ReserveTable(cls,table):
-    if len(cls.ActiveList)>0:
-      gametable = cls.GameTable_Table[cls.ActiveList[0]].gametable
-      gametable.table_id = table_id
-      gametable.active = True
-      gametable.AssignedTable = table
-      return gametable
+  def __init__(self):
+    self.tables = Queue()
+    for i in range(1,Total_No_Of_Tables):
+      self.tables.put(i)
+    self.occupied = {}
+
+  def ReserveTable(self,move,idx=-1,depth=-1):
+    if self.tables.qsize()>0:
+      move.gametable_id = self.tables.get() 
+      self.occupied[move.gametable_id] = MoveIdfy(move=move,depth=depth,index=idx)
+    else:
+      move.gametable_id = None ## better to raise a error here 
+    
+  def CleanTable(self,tableno):
+    print(f'cleaning table {tableno}')
+    del self.occupied[tableno]
+    self.tables.put(tableno)
+
+  def get_vacancy(self):
+    return self.tables.qsize()
+  
+  def MoveOf(self,gametable_no):
+    if gametable_no in self.occupied:
+      return self.occupied[gametable_no]
     return None
   
-  def Simulate(move):
-
-
-
+  def khalibiddideya(self):
+    print(self.tables.qsize())
+    return True if self.tables.qsize()==39 else False

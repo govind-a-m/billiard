@@ -6,7 +6,6 @@ public class SoftwarePocket : MonoBehaviour
 {	
 	public  Vector3 originalCueBallPosition;
 	public  GameObject cueball;
-
 	void Start()
 	{
 		cueball = gameObject.transform.parent.transform.parent.Find("Balls/CueBall").gameObject;

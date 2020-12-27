@@ -30,7 +30,6 @@ public class TableManager : MonoBehaviour
   void Awake()
   {
     TableData = new List<BallData>();
-    serializable_tabledata = new SerializableTableData(TableData);
     MsgTemplate = new SQEle(ConvToBytes(), DefaultCallback);
     enabled = false;
     timer = new Timer(WaitTimeVel);
@@ -42,7 +41,9 @@ public class TableManager : MonoBehaviour
     }
     posball_y = rbBalls["CueBall"].position.y;
     var tableno_str = gameObject.transform.parent.name.Split('_')[1];
-    GameProcess.tables[int.Parse(tableno_str)-1] = this;
+    TableNo = int.Parse(tableno_str)-1;
+    GameProcess.tables[TableNo] = this;
+    serializable_tabledata = new SerializableTableData(TableData,TableNo);
     TablePosition = gameObject.transform.parent.transform.position;
     TablePosition.y += posball_y;
     //UnityEngine.Debug.Log(GameProcess.tables[0]);
@@ -71,10 +72,10 @@ public class TableManager : MonoBehaviour
             {
               TableData.Add(new BallData(rb.gameObject.name, rb.position-TablePosition));
             }
-            else
-            {
-              TableData.Add(new BallData(rb.gameObject.name, new Vector3(9999.0F,0.0F,9999.0F)));
-            }
+            // else
+            // { 
+            //   TableData.Add(new BallData(rb.gameObject.name, new Vector3(9999.0F,0.0F,9999.0F)));
+            // }
             
           }
           MsgTemplate.data = ConvToBytes();

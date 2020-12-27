@@ -45,7 +45,7 @@ class Move:
     self.target_vel = 0
     self.v = 0
     self.VStrikes = []
-    self.SimResultTable = None
+    self.SimResultNode = None
     self.gametable_id = None
     self.a = 0
     self.b = 0
@@ -106,6 +106,7 @@ class VStrike:
     self.VRStrikes = []
     self.gametable_id = None
     self.aiming_vec_ag = phsi
+    self.SimResultNode = None
 
 
   def SpawnVRStrikes(self):
@@ -125,7 +126,7 @@ class VRStrike:
     self.b = b
     self.gametable_id = None
     self.aiming_vec_ag = phsi
-
+    self.SimResultNode = None
 
     # def CalcShotAngle(self):
   #   shifted_pckt = self.pocket.center-self.target.loc

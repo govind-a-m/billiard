@@ -87,7 +87,7 @@ class cMove(ctypes.Structure):
              ]
 
 class Move:
-  def __init__(self,cue=None,pocket=None,target=None):
+  def __init__(self,cue=None,pocket=None,target=None,node=None):
     try:
       self.cMove = cMove(cue=cue.cBall,pocket=pocket.cPoint,target=target.cBall)
     except:
@@ -106,10 +106,11 @@ class Move:
     self.v = 0
     self.impact_vel = 0
     self.VStrikes = []
-    self.SimResultTable = None
+    self.SimResultNode = None
     self.gametable_id = None
     self.a = 0
     self.b = 0
+    self.node = node
 
   def CalcShotAngle(self):
     DirMov.CalcShotAngle(ctypes.byref(self.cMove))
@@ -152,7 +153,7 @@ class Move:
   def SpawnVStrikes(self):
     self.VStrikes = []
     for i in range(abs((VStrike.v_max-self.v)//VStrike.v_step)):
-      self.VStrikes.append(VStrike(self.v+i*VStrike.v_step,self.aiming_vec_ag))
+      self.VStrikes.append(VStrike(self.v+i*VStrike.v_step,self.aiming_vec_ag,node=self.node))
   
   def _PerpSegmentLength(self,ball):
     return (PerpSegmentLength(self.cMove.aiming_vec,ball.cBall.position),
@@ -163,31 +164,34 @@ class VStrike:
   v_step = 10
   v_max = 250
 
-  def __init__(self,v,phsi):
+  def __init__(self,v,phsi,node=None):
     self.v = v
     self.a = 0.0
     self.b = 0.0
     self.VRStrikes = []
     self.gametable_id = None
     self.aiming_vec_ag = phsi
+    self.node = node
   
   def SpawnVRStrikes(self):
     self.VRStrikes = []
     for i in range(1,VRStrike.a_len):
       for j in range(1,VRStrike.a_len):
-        self.VRStrikes.append(VRStrike(self.v,VRStrike.a_min+i*VRStrike.a_step,VRStrike.a_min+j*VRStrike.a_step,self.aiming_vec_ag))
+        self.VRStrikes.append(VRStrike(self.v,VRStrike.a_min+i*VRStrike.a_step,
+                              VRStrike.a_min+j*VRStrike.a_step,self.aiming_vec_ag,self.node))
 
 class VRStrike:
   a_step = 0.23
   a_min = 0
   a_len = 3
   
-  def __init__(self,v,a,b,phsi):
+  def __init__(self,v,a,b,phsi,node=None):
     self.v = v
     self.a = a
     self.b = b
     self.gametable_id = None
     self.aiming_vec_ag = phsi
+    self.node = node
 
 PerpSegmentLength = DirMov.PerpSegment
 PerpSegmentLength.restype = ctypes.c_double

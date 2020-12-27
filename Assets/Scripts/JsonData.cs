@@ -33,10 +33,13 @@ namespace SerializeData
   {
     [SerializeField]
     public List<BallData> balls = new List<BallData>();
+    [SerializeField]
+    public int table_no;
     
-    public  SerializableTableData(List<BallData> tabledata)
+    public  SerializableTableData(List<BallData> tabledata,int tableno)
     {
       balls = tabledata;
+      table_no = tableno;
     }
   }
 

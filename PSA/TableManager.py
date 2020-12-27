@@ -3,19 +3,6 @@ try:
 except:
   from .PickPocket.MoveGenerator.DirectMoves import Ball,pocket,Move
 
-class TableManager:
-  tables = {}
-  count = 0
-
-  def __init__(self):
-    pass
-
-  @classmethod
-  def new(cls,sim_result):
-    cls.count += 1
-    cls.tables[cls.count] = Table(cls.count,sim_result)
-    return cls.tables[cls.count]
-
 class Table:
   height = 0.54
   half_width_inner = 8.875
@@ -32,23 +19,20 @@ class Table:
              pocket(-1*P2[0],P2[1]),
              pocket(-1*P1[0],P1[1])
             ]
-
-  def __init__(self,table_id,sim_result):
-    self.table_id = table_id
+  
+  def __init__(self,sim_result):
     self.balls = {}
     self.moves = []
-    for balldata in sim_result:
-      if balldata['BallName']!="CueBall":
-        self.balls[balldata['BallName']] = Ball(balldata['BallName'],balldata['x'],balldata['z'])
-      else:
-        self.cue = Ball(balldata['BallName'],balldata['x'],balldata['z'])
+    try:
+      for balldata in sim_result:
+        if balldata['BallName']!="CueBall":
+          self.balls[balldata['BallName']] = Ball(balldata['BallName'],balldata['x'],balldata['z'])
+        else:
+          self.cue = Ball(balldata['BallName'],balldata['x'],balldata['z'])
+    except:
+      print('NoneType Simulation result')
 
-  def SpawnMoves(self):
-    self.moves = []
-    for target in self.balls.values():
-      for pocket in self.pockets:
-        move =  Move(self.cue,pocket,target)
-        self.moves.append(move)
+
 
   def __repr__(self):
     return f'balls:{self.balls},cue:{self.cue},table_id:{self.table_id}'
