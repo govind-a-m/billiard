@@ -15,7 +15,7 @@ public class TableManager : MonoBehaviour
   public static ProcessPipeline Gp;
   private Transform[] ts;
   public float MAX_NetVelocity = 0.1f;
-  private float netvel = 0.0f;
+  public float netvel = 0.0f;
   public Timer timer;
   private BallData ballData;
   public SQEle MsgTemplate;
@@ -76,7 +76,6 @@ public class TableManager : MonoBehaviour
             // { 
             //   TableData.Add(new BallData(rb.gameObject.name, new Vector3(9999.0F,0.0F,9999.0F)));
             // }
-            
           }
           MsgTemplate.data = ConvToBytes();
           GameProcess.pipeline.sendQ.Enq(MsgTemplate);

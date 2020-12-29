@@ -19,24 +19,30 @@ class GameTree:
     starting_shot.v = force_vel
     root_table = Table(None)
     root_table.moves = [starting_shot]
-    self.root = GameState(table=root_table)
+    self.root = GameState(table=root_table,depth=-1)
     self.root.table.moves[0].node = self.root
 
 class GameState:
 
-  def __init__(self,table=None,parent_node=None,branch=None):
+  def __init__(self,table=None,parent_node=None,branch=None,depth=None):
     self.table = table
     self.stage = "INIT"
     self.parent = parent_node
     self.branch = branch
     self.BestScore = None
     self.BestMove = None
+    self.score = None
+    self.terminate = True
+    if depth==None:    
+      self.depth = parent_node.depth+1
+    else:
+      self.depth = depth
     
 
   @classmethod
-  def fromSimResult(cls,simresult,parent_node,branch):
+  def fromSimResult(cls,simresult,parent_node,branch,depth=None):
     return cls(table=Table(sim_result=simresult['balls']),parent_node=parent_node,
-               branch=branch)    
+               branch=branch,depth=depth)    
 
   def SpawnDirectMoves(self):
     self.table.moves = []

@@ -3,25 +3,27 @@ from queue import Queue
 
 class PreSim(threading.Thread):
 
-  def __init__(self):
+  def __init__(self,gametable):
     threading.Thread.__init__(self)
     self.q = Queue()
     self.StartEvent = threading.Event()
     self.StopEvent = threading.Event()
     self.StopEvent.set()
     self.Running = False
+    self.gtb = gametable
 
   def run(self):
     self.Running = True
     while self.Running:
       self.StartEvent.wait()
       self.StopEvent.clear()
+      self.gtb.vacant_evt.wait()
       presim_task = self.q.get(block=False)
       presim_task()
       if self.q.qsize()==0:
         self.StartEvent.clear()
         self.StopEvent.set()
-  
+
   def Enq(self,task):
     self.q.put(task)
     self.StartEvent.set()
@@ -38,16 +40,23 @@ class PostSim(threading.Thread):
     self.task = task
     self.pl = pipeline
     self.gtb = gametable
-    self.NodeSimComplete_Event = threading.Event()
+    self.results = Queue()
+    self.result_available_evt = threading.Event()
+    self.result_available_evt.clear()
 
   def run(self):
     self.Running = True
     while self.Running:
       self.pl.WaitForArrival()
-      self.task(self.pl.recvr.RecvOne(),self.gtb)
-      if self.gtb.khalibiddideya():
-        self.NodeSimComplete_Event.set()
-        
+      self.results.put(self.task(self.pl.recvr.RecvOne(),self.gtb))
+      self.result_available_evt.set()
+  
+  def GetSimResult(self):
+    self.result_available_evt.wait()
+    if self.results.qsize()==1:
+      self.result_available_evt.clear()
+    return self.results.get(block=False)
+
   def stop(self):
     self.Running = False
     self.join()

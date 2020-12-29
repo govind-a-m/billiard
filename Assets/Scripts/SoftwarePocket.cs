@@ -23,7 +23,11 @@ public class SoftwarePocket : MonoBehaviour
 			rb.rotation = Quaternion.identity;
 		}
 		else
-		{
+		{	
+			Rigidbody rb = other.gameObject.GetComponent<Rigidbody>(); 
+			rb.velocity = Vector3.zero;
+			rb.angularVelocity = Vector3.zero;
+			rb.rotation = Quaternion.identity;
 			other.gameObject.SetActive(false);
 		}
 	}

@@ -5,6 +5,25 @@ def eval(node):
     pass
 
 def successfull(move):
-  if len(move.node.parent_node.table.balls)>len(move.node.table.balls):
+  if len(move.node.parent.table.balls)>len(move.node.table.balls):
     return True
   return False
+
+
+def EvalNode(node):
+  '''
+  Evaluates node
+  as there is no error introduced to shots its simple now
+  '''
+  node.score = len(node.parent.table.balls)-len(node.table.balls)
+
+def RecursiveEvaluation(node,depth):
+  if node==None:
+    return 0
+  if node.depth==depth:
+    return node.score
+  else:
+    for move in node.table.moves:
+      if move.valid==0:
+        node.score += RecursiveEvaluation(move.SimResultNode,depth)
+    return node.score
