@@ -12,6 +12,8 @@ public class GameProcess : MonoBehaviour
   public SimGameState simGameState;
   public static int TotalNofTables = 40;
   public static TableManager[] tables = new TableManager[TotalNofTables];
+  public int Nof_RST_Strikes = 0;
+  public int Nof_Strikes = 0;
 
   void Awake()
   {
@@ -22,7 +24,9 @@ public class GameProcess : MonoBehaviour
   }
 
   void Update()
-  {
+  { 
+    // shot_variation_sim();
+    // enabled = false;
     foreach(String msg in pipeline.RecvAll())
 		{
 
@@ -32,9 +36,11 @@ public class GameProcess : MonoBehaviour
       {
         case "STRIKE_CMD":
           PassOnStrikeCmd(msg.Substring(10));
+          Nof_Strikes++;
           break;
         case "RST_STRIKE":
           RST_Strike_Cmd(msg.Substring(10));
+          Nof_RST_Strikes++;
           break;
       }
 		}
@@ -67,5 +73,29 @@ public class GameProcess : MonoBehaviour
   public static int NofRecvdMsgs
   {
     get { return pipeline.recvQ.Q.Count;}
+  }
+
+  private void shot_variation_sim()
+  { float start_v = 300.0f;
+    float step_v = 100.0f;
+    int len_v = 4;
+    float start_a = 0;
+    float step_a = 0.23f;
+    int len_a = 3;
+    int tno = 0;
+
+    for(int i=0;i<len_v;i++)
+    {
+      for(int j=0; j<len_a;j++)
+      {
+        for(int k=0; k<len_a;k++)
+        {
+          tables[tno].Fc = new ForceCommand(start_v+i*step_v,1.57f,start_a+step_a*j,start_a+step_a*k,tno);
+          tables[tno].enabled = true;
+          tno++;
+        }
+      }
+    }
+    return;
   }
 }

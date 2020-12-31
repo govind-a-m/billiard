@@ -1,21 +1,22 @@
-# try:
-import threading
-from Ipc.PipeLine import PipeLine
-from TableManager import Table
-from GameTree import GameTree,GameState
-from GameTable import GameTable
-from PrePostSim import PreSim,PostSim
-from PickPocket.MoveGenerator.Evaluate import EvalNode,RecursiveEvaluation
-# except:
-# 	from .Ipc.PipeLine import PipeLine
-# 	from .TableManager import Table
-# 	from .GameTree import GameTree,GameState
-# 	from .GameTable import GameTable
-# 	from .PrePostSim import PreSim,PostSim
-# 	from .PickPocket.MoveGenerator.Evaluate import EvalNode
+try:
+	import threading
+	from Ipc.PipeLine import PipeLine
+	from TableManager import Table
+	from GameTree import GameTree,GameState
+	from GameTable import GameTable
+	from PrePostSim import PreSim,PostSim
+	from PickPocket.MoveGenerator.Evaluate import EvalNode,RecursiveEvaluation
+except:
+	from .Ipc.PipeLine import PipeLine
+	from .TableManager import Table
+	from .GameTree import GameTree,GameState
+	from .GameTable import GameTable
+	from .PrePostSim import PreSim,PostSim
+	from .PickPocket.MoveGenerator.Evaluate import EvalNode
 	
 import Ipc.commands as commands
 import json
+import time
 
 LookAheadDepth = 3
 pipeline = PipeLine() 
@@ -29,14 +30,15 @@ def RecvGreetings():
 	for msg in pipeline.recvr.RecvAll():
 		print(msg)
 
-def CreatePresimTask(move,table):
+def CreatePreSimTask(move,table):
 	def presim_task():
 		gametable.ReserveTable(move)
 		cmd = commands.EncodeSGState(table,move)
 		pipeline.sender.Send(cmd)
-		print(move.valid,move.pocket,move.shotangle,move.target.BallName,
-					move.v,move.target_vel,move.impact_vel,
-					move.cMove.min_dst_to_aiming_line,move.cMove.min_dst_to_target_line)
+		print(move)
+		# print(move.valid,move.pocket,move.shotangle,move.target.BallName,
+		# 			move.v,move.target_vel,move.impact_vel,
+		# 			move.cMove.min_dst_to_aiming_line,move.cMove.min_dst_to_target_line)
 	return presim_task
 
 def CreatePostSimTask():
@@ -58,48 +60,77 @@ def EnqPreSimTasks(node):
 		move.CalcShotAngle()
 		move.CheckValidity(node.table)
 		if move.valid==0:
-			PreSimTask.Enq(CreatePresimTask(move,move.node.table))
+			PreSimTask.Enq(CreatePreSimTask(move,move.node.table))
+
+def EnqPreSimTasks_V(branch):
+	branch.SpawnVStrikes()
+	for vstrike in branch.VStrikes:
+		PreSimTask.Enq(CreatePreSimTask(vstrike,vstrike.node.table))
+
+def EnqPreSimTasks_VR(branch):
+	branch.SpawnVRStrikes()
+	for vrstrike in branch.VRStrikes:
+		PreSimTask.Enq(CreatePreSimTask(vrstrike,vrstrike.node.table))
 
 def isSimulationRunning():
 	return not(gametable.fullhouse_evt.is_set()) or PreSimTask.StartEvent.is_set()
 
-PostSimTask = PostSim(pipeline=pipeline,task=CreatePostSimTask(),gametable=gametable)
+def PlayShot(move):
+	enc_msg = commands.EncodeStrike(move)
+	print(enc_msg)
+	pipeline.sender.Send(enc_msg)
+	pipeline.WaitForArrival()
+	msg = next(pipeline.recvr.RecvAll())
+	print(msg)
+	return json.loads(msg)
+
+PostSimTask = PostSim(pipeline=pipeline,task=CreatePostSimTask(),
+											gametable=gametable,Expecting_func = isSimulationRunning)
 
 RecvGreetings()
 PreSimTask.start()
-enc_msg = commands.EncodeStrike(gametree.root.table.moves[0])
-print(enc_msg)
-pipeline.sender.Send(enc_msg)
-pipeline.WaitForArrival()
-msg = next(pipeline.recvr.RecvAll())
-print(msg)
-simresult = json.loads(msg)
-gametree.root.table.moves[0].SimResultNode = GameState.fromSimResult(simresult,gametree.root,gametree.root.table.moves[0],depth=0)
-PostSimTask.start()
+simresult = PlayShot(gametree.root.table.moves[0])
+start_time = time.time()
+gametree.root.table.moves[0].SimResultNode = GameState.fromSimResult(simresult,gametree.root,
+																																		 gametree.root.table.moves[0],
+																																		 depth=0)
 pAf_states = [gametree.root.table.moves[0].SimResultNode,[],[],[]]
-
-
 depth = 0
-width = 0
 EnqPreSimTasks(pAf_states[0])
-
+PostSimTask.start()  #has to be called after PreSim Tasks have started
 
 while True:
 	if  isSimulationRunning() or  PostSimTask.result_available_evt.is_set():
 		result_node = PostSimTask.GetSimResult()
-		if result_node.score>0 and result_node.depth<LookAheadDepth:
-			EnqPreSimTasks(result_node)
+		if result_node.branch.move_type == 'DIRECT_MOVE':
+			if result_node.score>0:
+				if result_node.depth<LookAheadDepth:
+					EnqPreSimTasks(result_node)
+				EnqPreSimTasks_V(result_node.branch)
+		elif result_node.branch.move_type == 'DIRECT_MOVE_V':
+			if result_node.score > 0:
+				if result_node.depth<LookAheadDepth:
+					EnqPreSimTasks(result_node)
+				EnqPreSimTasks_VR(result_node.branch)
+		else :
+			if result_node.score >0:
+				if result_node.depth<LookAheadDepth:
+					EnqPreSimTasks(result_node)
 	else:
-		print('stopping main thread')
+		print('Halting usual main thred tasks')
 		break
 
 gametable.fullhouse_evt.wait()
-print('sim complete')			
+print('sim complete')
+PostSimTask.stop()
+pAf_states[0].FindBestMove(LookAheadDepth)
+print(f'time taken:{time.time()-start_time}')
+PlayShot(pAf_states[0].BestMove)
 # PostSimTask.stop() have to find a way a stop these threads
 # PreSimTask.stop()
-for child in pAf_states[1]:
-	RecursiveEvaluation(child,LookAheadDepth)
-	print(f'score:{child.score} target:{child.branch.target.BallName}')
+# for child in pAf_states[1]:
+# 	RecursiveEvaluation(child,LookAheadDepth)
+# 	print(f'score:{child.score} target:{child.branch.target.BallName}')
 
 
 # print(f'{not(gametable.fullhouse_evt.is_set())} {PreSimTask.StartEvent.is_set()} {PostSimTask.result_available_evt.is_set()}')

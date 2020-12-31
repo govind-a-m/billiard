@@ -34,7 +34,7 @@ class PreSim(threading.Thread):
 
 class PostSim(threading.Thread):
 
-  def __init__(self,pipeline,task,gametable):
+  def __init__(self,pipeline,task,gametable,Expecting_func):
     threading.Thread.__init__(self)
     self.Running = False
     self.task = task
@@ -43,13 +43,18 @@ class PostSim(threading.Thread):
     self.results = Queue()
     self.result_available_evt = threading.Event()
     self.result_available_evt.clear()
+    self.isExpecting =  Expecting_func
 
   def run(self):
     self.Running = True
-    while self.Running:
-      self.pl.WaitForArrival()
-      self.results.put(self.task(self.pl.recvr.RecvOne(),self.gtb))
-      self.result_available_evt.set()
+    while True:
+      if self.Running and self.isExpecting():
+        self.pl.WaitForArrival()
+        self.results.put(self.task(self.pl.recvr.RecvOne(),self.gtb))
+        self.result_available_evt.set()
+      else:
+        print('Halting Post Sim Thread')
+        break
   
   def GetSimResult(self):
     self.result_available_evt.wait()
@@ -59,4 +64,7 @@ class PostSim(threading.Thread):
 
   def stop(self):
     self.Running = False
+    self.results = Queue()
+    self.result_available_evt.clear()
+    print('Stopping Post Sim Thread')
     self.join()

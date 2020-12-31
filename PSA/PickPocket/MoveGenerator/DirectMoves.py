@@ -111,6 +111,7 @@ class Move:
     self.a = 0
     self.b = 0
     self.node = node
+    self.move_type = "DIRECT_MOVE"
 
   def CalcShotAngle(self):
     DirMov.CalcShotAngle(ctypes.byref(self.cMove))
@@ -152,19 +153,27 @@ class Move:
 
   def SpawnVStrikes(self):
     self.VStrikes = []
-    for i in range(abs((VStrike.v_max-self.v)//VStrike.v_step)):
-      self.VStrikes.append(VStrike(self.v+i*VStrike.v_step,self.aiming_vec_ag,node=self.node))
+    for i in range(VStrike.v_len):
+      vel = self.v+i*VStrike.v_step
+      if vel<VStrike.v_max:
+        self.VStrikes.append(VStrike(vel,self.aiming_vec_ag,node=self.node))
+      else:
+        break
   
   def _PerpSegmentLength(self,ball):
     return (PerpSegmentLength(self.cMove.aiming_vec,ball.cBall.position),
             PerpSegmentLength(self.cMove.target_vec,ball.cBall.position))
 
 
-class VStrike:
-  v_step = 10
-  v_max = 250
+  def __str__(self):
+    return f'D({self.valid})->target_ball:{self.target.BallName},shotangle:{self.aiming_vec_ag} pocket:{self.pocket.x},{self.pocket.y}'
 
-  def __init__(self,v,phsi,node=None):
+class VStrike:
+  v_step = 50
+  v_max = 250
+  v_len = 2
+
+  def __init__(self,v,phsi,node):
     self.v = v
     self.a = 0.0
     self.b = 0.0
@@ -172,6 +181,8 @@ class VStrike:
     self.gametable_id = None
     self.aiming_vec_ag = phsi
     self.node = node
+    self.move_type = "DIRECT_MOVE_V"
+    self.SimResultNode = None
   
   def SpawnVRStrikes(self):
     self.VRStrikes = []
@@ -179,19 +190,28 @@ class VStrike:
       for j in range(1,VRStrike.a_len):
         self.VRStrikes.append(VRStrike(self.v,VRStrike.a_min+i*VRStrike.a_step,
                               VRStrike.a_min+j*VRStrike.a_step,self.aiming_vec_ag,self.node))
+  
+  def __str__(self):
+    return f'DV->shotangle:{self.aiming_vec_ag} target_vel:{self.v}'
+
 
 class VRStrike:
-  a_step = 0.23
+  a_step = 0.4
   a_min = 0
-  a_len = 3
+  a_len = 2
   
-  def __init__(self,v,a,b,phsi,node=None):
+  def __init__(self,v,a,b,phsi,node):
     self.v = v
     self.a = a
     self.b = b
     self.gametable_id = None
     self.aiming_vec_ag = phsi
     self.node = node
+    self.move_type = "DIRECT_MOVE_VR"
+    self.SimResultNode = None
+
+  def __str__(self):
+    return f'DVR->target_vel:{self.v} , offsets:{self.a},{self.b}'
 
 PerpSegmentLength = DirMov.PerpSegment
 PerpSegmentLength.restype = ctypes.c_double

@@ -26,4 +26,8 @@ def RecursiveEvaluation(node,depth):
     for move in node.table.moves:
       if move.valid==0:
         node.score += RecursiveEvaluation(move.SimResultNode,depth)
+        for vstrike in move.VStrikes:
+          node.score += RecursiveEvaluation(vstrike.SimResultNode,depth)
+          for vrstrike in vstrike.VRStrikes:
+            node.score += RecursiveEvaluation(vrstrike.SimResultNode,depth)
     return node.score

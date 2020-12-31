@@ -26,8 +26,11 @@ def StrikeCmd(table_id,force,phsi,a,b):
         }
   return ConvertTobytes('STRIKE_CMD',cmd,'END_OF_MSG')
 
-def EncodeStrike(strike):
-  return StrikeCmd(strike.gametable_id,strike.v,strike.aiming_vec_ag,strike.a,strike.b)
+def EncodeStrike(strike,gametable_id=0):
+  '''
+  is called to play the best shot game table id is 0
+  '''
+  return StrikeCmd(gametable_id,strike.v,strike.aiming_vec_ag,strike.a,strike.b)
 
 def EncodeSGState(table,strike):
   balls = []

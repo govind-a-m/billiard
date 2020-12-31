@@ -3,9 +3,11 @@ import math
 try:
   from PickPocket.MoveGenerator.DirectMoves import Move,VRStrike,VStrike
   from TableManager import Table
+  from PickPocket.MoveGenerator.Evaluate import RecursiveEvaluation
 except:
   from .PickPocket.MoveGenerator.DirectMoves import Move,VRStrike,VStrike
   from .TableManager import Table
+  from .PickPocket.MoveGenerator.Evaluate import RecursiveEvaluation
 
 import Ipc.commands as commands
 import json
@@ -29,7 +31,6 @@ class GameState:
     self.stage = "INIT"
     self.parent = parent_node
     self.branch = branch
-    self.BestScore = None
     self.BestMove = None
     self.score = None
     self.terminate = True
@@ -50,3 +51,25 @@ class GameState:
       for pocket in self.table.pockets:
         move =  Move(self.table.cue,pocket,target,node=self)
         self.table.moves.append(move)
+  
+  def FindBestMove(self,look_ahead_depth):
+    best_score = 0
+    for move in self.table.moves:
+      if (move.SimResultNode is not None) and (move.valid==0):
+        RecursiveEvaluation(move.SimResultNode,depth=look_ahead_depth)
+        best_score = self.assign_best_move(best_score,move)
+        for vstrike in move.VStrikes:
+          RecursiveEvaluation(vstrike.SimResultNode,depth=look_ahead_depth)
+          best_score = self.assign_best_move(best_score,vstrike)
+          for vrstrike in vstrike.VRStrikes:
+            RecursiveEvaluation(vrstrike.SimResultNode,depth=look_ahead_depth)
+            best_score = self.assign_best_move(best_score,vrstrike)
+    print(f'best score:{self.BestMove.SimResultNode.score} target:{self.BestMove.target.BallName} {self.BestMove.pocket}') 
+    return self.BestMove
+
+
+  def assign_best_move(self,best_score,move):
+    if move.SimResultNode.score>best_score:
+      self.BestMove = move
+      return move.SimResultNode.score
+    return best_score
