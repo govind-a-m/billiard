@@ -123,8 +123,15 @@ double PerpSegment(struct Segment seg,struct Point p)
   return h;
 }
 
-int main()
+void ProcessMove(struct Move* move_ptr,struct Ball* ball_ptr,int nof_balls)
 {
-  //NOP
-  return 1;
+  CalcShotAngle(move_ptr);
+  CheckValidity(move_ptr,ball_ptr,nof_balls);
+  CalcMinVelocity_reqd(move_ptr);
 }
+
+// int main()
+// {
+//   //NOP
+//   return 1;
+// }

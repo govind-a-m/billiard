@@ -6,6 +6,7 @@ try:
 	from GameTable import GameTable
 	from PrePostSim import PreSim,PostSim
 	from PickPocket.MoveGenerator.Evaluate import EvalNode,RecursiveEvaluation
+	from PickPocket.utils.StopWatch import StopWatch
 except:
 	from .Ipc.PipeLine import PipeLine
 	from .TableManager import Table
@@ -13,7 +14,8 @@ except:
 	from .GameTable import GameTable
 	from .PrePostSim import PreSim,PostSim
 	from .PickPocket.MoveGenerator.Evaluate import EvalNode
-	
+	from .PickPocket.utils.StopWatch import StopWatch
+
 import Ipc.commands as commands
 import json
 import time
@@ -25,6 +27,8 @@ pipeline.WaitForArrival()
 gametree = GameTree()
 gametable = GameTable()
 PreSimTask = PreSim(gametable=gametable)
+VectorMath_StopWatch = StopWatch()
+
 
 def RecvGreetings():
 	for msg in pipeline.recvr.RecvAll():
@@ -54,11 +58,15 @@ def CreatePostSimTask():
 		return move.SimResultNode
 	return postsim_task
 
+
+
 def EnqPreSimTasks(node):
 	node.SpawnDirectMoves()
 	for move in node.table.moves:
+		VectorMath_StopWatch.Start()
 		move.CalcShotAngle()
 		move.CheckValidity(node.table)
+		VectorMath_StopWatch.Stop()
 		if move.valid==0:
 			PreSimTask.Enq(CreatePreSimTask(move,move.node.table))
 
@@ -125,6 +133,8 @@ print('sim complete')
 PostSimTask.stop()
 pAf_states[0].FindBestMove(LookAheadDepth)
 print(f'time taken:{time.time()-start_time}')
+print(f'total time waited for game table availability {PostSimTask.stopwatch.elapsed_time_s}')
+print(f'time taken by direct move vector math {VectorMath_StopWatch.elapsed_time_s}')
 PlayShot(pAf_states[0].BestMove)
 # PostSimTask.stop() have to find a way a stop these threads
 # PreSimTask.stop()

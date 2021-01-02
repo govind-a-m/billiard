@@ -1,5 +1,7 @@
+from PickPocket.utils.StopWatch import StopWatch
 import threading
 from queue import Queue
+import time
 
 class PreSim(threading.Thread):
 
@@ -44,6 +46,7 @@ class PostSim(threading.Thread):
     self.result_available_evt = threading.Event()
     self.result_available_evt.clear()
     self.isExpecting =  Expecting_func
+    self.stopwatch = StopWatch() # or total execution time on unity
 
   def run(self):
     self.Running = True
@@ -57,7 +60,9 @@ class PostSim(threading.Thread):
         break
   
   def GetSimResult(self):
+    self.stopwatch.Start()
     self.result_available_evt.wait()
+    self.stopwatch.Stop()
     if self.results.qsize()==1:
       self.result_available_evt.clear()
     return self.results.get(block=False)
@@ -67,4 +72,42 @@ class PostSim(threading.Thread):
     self.results = Queue()
     self.result_available_evt.clear()
     print('Stopping Post Sim Thread')
+    self.join()
+
+class MultiPreSim(threading.Thread):
+
+  Nof_Threads = 1
+  q = Queue()
+  StartEvent = threading.Event()
+  StopEvent = threading.Event()
+  StopEvent.set()
+  Running = False
+  gtb = None
+  
+  def __init__(self,gametable):
+    threading.Thread.__init__(self)
+
+  @classmethod
+  def Init(cls,nof_threads,gametable):
+    cls.Nof_Threads = nof_threads
+    cls.gtb = gametable
+  
+  def run(self):
+    self.Running = True
+    while self.Running:
+      self.StartEvent.wait()
+      self.StopEvent.clear()
+      self.gtb.vacant_evt.wait()
+      presim_task = self.q.get(block=False)
+      presim_task()
+      if self.q.qsize()==0:
+        self.StartEvent.clear()
+        self.StopEvent.set()
+
+  def Enq(self,task):
+    self.q.put(task)
+    self.StartEvent.set()
+      
+  def stop(self):
+    self.Running = False
     self.join()

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using SerializeData;
+using System.Diagnostics;
 
 public class GameProcess : MonoBehaviour
 {
@@ -14,12 +15,21 @@ public class GameProcess : MonoBehaviour
   public static TableManager[] tables = new TableManager[TotalNofTables];
   public int Nof_RST_Strikes = 0;
   public int Nof_Strikes = 0;
+  public float TotalSimTime = 0.0f;
+  public Stopwatch SimTimer;
+  private readonly String EMPTYHOUSE_FLAG = "0000000000000000000000000000000000000000";
+  public static String SimFlags;
+  private Stopwatch SimUpdateTimer;
 
   void Awake()
   {
     fc = new ForceCommand(0.0f, 0.0f, 0.0f, 0.0f,0);
     pipeline = new ProcessPipeline();
     pipeline.StartPipeLine();
+    SimTimer = new Stopwatch();
+    SimFlags = EMPTYHOUSE_FLAG;
+    SimUpdateTimer = new Stopwatch();
+    SimUpdateTimer.Start();
     //SimGameState.jsonprototype();
   }
 
@@ -31,7 +41,7 @@ public class GameProcess : MonoBehaviour
 		{
 
 			String msg_type =  msg.Substring(0,10);
-      Debug.Log("recieved msg"+msg);
+      UnityEngine.Debug.Log("recieved msg"+msg);
       switch(msg_type)
       {
         case "STRIKE_CMD":
@@ -44,6 +54,13 @@ public class GameProcess : MonoBehaviour
           break;
       }
 		}
+    if(SimUpdateTimer.ElapsedMilliseconds>=1000)
+    {
+      _UpdateTotalSimTime();
+      SimUpdateTimer.Reset();
+      SimUpdateTimer.Start();
+    }
+    
   }
 
   private void PassOnStrikeCmd(String msg)
@@ -98,4 +115,58 @@ public class GameProcess : MonoBehaviour
     }
     return;
   }
+
+  private void _UpdateTotalSimTime()
+  { Boolean _anytablerunning = false;
+    
+    foreach(TableManager table in tables)
+    { 
+      if(table.enabled)
+      {
+        _anytablerunning = true;
+        break;
+      }
+    }
+    if(_anytablerunning)
+    {
+      if(!SimTimer.IsRunning)
+      {
+        SimTimer.Start();
+      }
+      TotalSimTime = SimTimer.ElapsedMilliseconds/1000.0f;
+    }
+    else
+    {
+      if(SimTimer.IsRunning)
+      {
+        SimTimer.Stop();
+        TotalSimTime = SimTimer.ElapsedMilliseconds/1000.0f;
+      }
+    }
+  }
+
+  public static void SetSimFlag(int index)
+  {
+    SimFlags = SimFlags.Substring(0,index)+'1'+SimFlags.Substring(index+1);
+  }
+
+  public static void ResetSimFlag(int index)
+  {
+    SimFlags = SimFlags.Substring(0,index)+'0'+SimFlags.Substring(index+1);
+  }
+
+  private void UpdateTotalSimTime()
+  {
+    if(SimFlags!=EMPTYHOUSE_FLAG)
+    { 
+      if(!SimTimer.IsRunning)
+        {
+          SimTimer.Start();
+        }
+    }
+    SimTimer.Stop();
+    TotalSimTime = SimTimer.ElapsedMilliseconds/1000.0f;
+    UnityEngine.Debug.Log(SimFlags);
+  }
 }
+ 

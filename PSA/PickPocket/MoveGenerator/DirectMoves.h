@@ -87,3 +87,5 @@ double VectorLength(struct Vector vec);
 double distance(struct Point p1,struct Point p2);
 double VectorDot(struct Vector vec1,struct Vector vec2);
 double PerpSegment(struct Segment seg,struct Point p);
+void ProcessMove(struct Move* move_ptr,struct Ball* ball_ptr,int nof_balls);
+

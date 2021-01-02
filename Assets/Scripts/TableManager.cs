@@ -8,6 +8,7 @@ using SerializeData;
 using System.Text;
 using System;
 
+
 public class TableManager : MonoBehaviour
 {
   public List<BallData> TableData;
@@ -26,6 +27,8 @@ public class TableManager : MonoBehaviour
   public SerializableTableData serializable_tabledata;
   public float posball_y;
   private Vector3 TablePosition;
+  public Stopwatch execution_timer;
+
 
   void Awake()
   {
@@ -46,6 +49,7 @@ public class TableManager : MonoBehaviour
     serializable_tabledata = new SerializableTableData(TableData,TableNo);
     TablePosition = gameObject.transform.parent.transform.position;
     TablePosition.y += posball_y;
+    execution_timer = new Stopwatch();
     //UnityEngine.Debug.Log(GameProcess.tables[0]);
   }
 
@@ -79,6 +83,7 @@ public class TableManager : MonoBehaviour
           }
           MsgTemplate.data = ConvToBytes();
           GameProcess.pipeline.sendQ.Enq(MsgTemplate);
+          // GameProcess.ResetSimFlag(TableNo);
           enabled = false;
           timer.ResetTimer();
         }
@@ -109,6 +114,7 @@ public class TableManager : MonoBehaviour
 
   private void OnEnable()
   { 
+    // GameProcess.SetSimFlag(TableNo);
     cueController.ApplyForce(Fc);
     // if(cueController.SimComplete)
     // {

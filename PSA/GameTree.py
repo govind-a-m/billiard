@@ -64,7 +64,7 @@ class GameState:
           for vrstrike in vstrike.VRStrikes:
             RecursiveEvaluation(vrstrike.SimResultNode,depth=look_ahead_depth)
             best_score = self.assign_best_move(best_score,vrstrike)
-    print(f'best score:{self.BestMove.SimResultNode.score} target:{self.BestMove.target.BallName} {self.BestMove.pocket}') 
+    print(f'best score:{self.BestMove.SimResultNode.score} move:{self.BestMove}') 
     return self.BestMove
 
 
