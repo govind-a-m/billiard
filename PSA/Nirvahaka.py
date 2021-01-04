@@ -102,40 +102,47 @@ start_time = time.time()
 gametree.root.table.moves[0].SimResultNode = GameState.fromSimResult(simresult,gametree.root,
 																																		 gametree.root.table.moves[0],
 																																		 depth=0)
+gametree.root.RealChild = gametree.root.table.moves[0].SimResultNode
+BoardState = gametree.root.RealChild
 pAf_states = [gametree.root.table.moves[0].SimResultNode,[],[],[]]
-depth = 0
-EnqPreSimTasks(pAf_states[0])
-PostSimTask.start()  #has to be called after PreSim Tasks have started
 
-while True:
-	if  isSimulationRunning() or  PostSimTask.result_available_evt.is_set():
-		result_node = PostSimTask.GetSimResult()
-		if result_node.branch.move_type == 'DIRECT_MOVE':
-			if result_node.score>0:
-				if result_node.depth<LookAheadDepth:
-					EnqPreSimTasks(result_node)
-				EnqPreSimTasks_V(result_node.branch)
-		elif result_node.branch.move_type == 'DIRECT_MOVE_V':
-			if result_node.score > 0:
-				if result_node.depth<LookAheadDepth:
-					EnqPreSimTasks(result_node)
-				EnqPreSimTasks_VR(result_node.branch)
-		else :
-			if result_node.score >0:
-				if result_node.depth<LookAheadDepth:
-					EnqPreSimTasks(result_node)
-	else:
-		print('Halting usual main thred tasks')
-		break
+while len(BoardState.table.balls)>0:
+	EnqPreSimTasks(BoardState)
+	PostSimTask.Restart()  #has to be called after PreSim Tasks have started
+	while True:
+		if  isSimulationRunning() or  PostSimTask.result_available_evt.is_set():
+			result_node = PostSimTask.GetSimResult()
+			if result_node.branch.move_type == 'DIRECT_MOVE':
+				if result_node.score>0:
+					if result_node.depth<LookAheadDepth:
+						EnqPreSimTasks(result_node)
+					EnqPreSimTasks_V(result_node.branch)
+			elif result_node.branch.move_type == 'DIRECT_MOVE_V':
+				if result_node.score > 0:
+					if result_node.depth<LookAheadDepth:
+						EnqPreSimTasks(result_node)
+					EnqPreSimTasks_VR(result_node.branch)
+			else :
+				if result_node.score >0:
+					if result_node.depth<LookAheadDepth:
+						EnqPreSimTasks(result_node)
+		else:
+			print('Halting usual main thred tasks')
+			gametable.fullhouse_evt.wait()
+			print('sim complete')
+			BoardState.FindBestMove(LookAheadDepth)
+			simresult = PlayShot(BoardState.BestMove)
+			BoardState.RealChild = GameState.fromSimResult(simresult,parent_node=BoardState,
+																										 branch=BoardState.BestMove,depth=0)
+			BoardState = BoardState.RealChild
+			pAf_states = [BoardState,[],[],[]]
+			print(f'moving to next shot balls remaining {len(BoardState.table.balls)}')
+			break
 
-gametable.fullhouse_evt.wait()
-print('sim complete')
-PostSimTask.stop()
-pAf_states[0].FindBestMove(LookAheadDepth)
 print(f'time taken:{time.time()-start_time}')
 print(f'total time waited for game table availability {PostSimTask.stopwatch.elapsed_time_s}')
 print(f'time taken by direct move vector math {VectorMath_StopWatch.elapsed_time_s}')
-PlayShot(pAf_states[0].BestMove)
+
 # PostSimTask.stop() have to find a way a stop these threads
 # PreSimTask.stop()
 # for child in pAf_states[1]:

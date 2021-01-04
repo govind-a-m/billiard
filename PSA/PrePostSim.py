@@ -1,3 +1,4 @@
+from enum import Flag
 from PickPocket.utils.StopWatch import StopWatch
 import threading
 from queue import Queue
@@ -47,17 +48,19 @@ class PostSim(threading.Thread):
     self.result_available_evt.clear()
     self.isExpecting =  Expecting_func
     self.stopwatch = StopWatch() # or total execution time on unity
+    self.restart_event = threading.Event()
 
   def run(self):
     self.Running = True
-    while True:
+    while self.Running:
       if self.Running and self.isExpecting():
         self.pl.WaitForArrival()
         self.results.put(self.task(self.pl.recvr.RecvOne(),self.gtb))
         self.result_available_evt.set()
       else:
-        print('Halting Post Sim Thread')
-        break
+        print('Post Sim Thread malagtide')
+        self.restart_event.clear()
+        self.restart_event.wait()
   
   def GetSimResult(self):
     self.stopwatch.Start()
@@ -69,10 +72,16 @@ class PostSim(threading.Thread):
 
   def stop(self):
     self.Running = False
-    self.results = Queue()
-    self.result_available_evt.clear()
-    print('Stopping Post Sim Thread')
+    self.restart_event.set()
     self.join()
+  
+  def Restart(self):
+    if self.Running:
+      self.restart_event.set()
+      print('post sim thread ebbisi aaytu')
+    else:
+      self.start()
+      print('Post Sim Thread shuruvagide')
 
 class MultiPreSim(threading.Thread):
 

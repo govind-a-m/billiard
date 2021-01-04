@@ -38,7 +38,7 @@ class GameState:
       self.depth = parent_node.depth+1
     else:
       self.depth = depth
-    
+    self.RealChild = None
 
   @classmethod
   def fromSimResult(cls,simresult,parent_node,branch,depth=None):
